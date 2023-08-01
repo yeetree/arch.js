@@ -3,11 +3,18 @@
 <head>
     <title>Arch.JS</title>
     <link rel="stylesheet" type="text/css" href="./vm/style.css">
+
+    <script type="text/javascript" src="./vm/display.js"></script>
+    <script type="text/javascript" src="./vm/memory.js"></script>
+    <script type="text/javascript" src="./vm/registers.js"></script>
+    <script type="text/javascript" src="./vm/arch.js"></script>
 </head>
 
 <body>
     <div id="screen-container">
         <canvas id="screen"></canvas>
     </div>
-    <script type="text/javascript" src="./vm/display.js"></script>
+    <script>
+        archjs = new arch();
+    </script>
 </body>
