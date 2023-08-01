@@ -13,6 +13,8 @@ class memory {
     {
         if(loc >= 0 && loc <= this.data.length - 1)
             return this.data[loc];
+        else
+            return 0;
     }
     load = function(mem)
     {

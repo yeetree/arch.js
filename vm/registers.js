@@ -1,57 +1,40 @@
 //Arch.js Registers:
 //This simulates the registers on a 8 bit CPU.
-//These were largely modeled after the 8-bit AVR.
+//These were largely modeled after the JDH-8.
 
 class registers {
-    sreg=null;
 
-    r1=null;
-    r2=null;
-    r3=null;
-    r4=null;
-    r5=null;
-    r6=null;
-    r7=null;
-    r8=null;
-    r9=null;
-    r10=null;
-    r11=null;
-    r12=null;
-    r13=null;
-    r14=null;
-    r15=null;
-    r16=null;
+    a=null;
+    b=null;
+    c=null;
+    d=null;
 
-    sph=null;
-    spl=null;
+    ix=null;
+    il=null;
+    r=null;
 
-    pc=null;
+    f = null;
+
+    mb = null;
+    sp = null;
+    pc = null;
 
     constructor()
     {
         //Sets up registers
-        this.sreg = new register8();
+        this.f = new register8();
 
-        this.r1 = new register8();
-        this.r2 = new register8();
-        this.r3 = new register8();
-        this.r4 = new register8();
-        this.r5 = new register8();
-        this.r6 = new register8();
-        this.r7 = new register8();
-        this.r8 = new register8();
-        this.r9 = new register8();
-        this.r10 = new register8();
-        this.r11 = new register8();
-        this.r12 = new register8();
-        this.r13 = new register8();
-        this.r14 = new register8();
-        this.r15 = new register8();
-        this.r16 = new register8();
+        this.a = new register8();
+        this.b = new register8();
+        this.c = new register8();
+        this.d = new register8();
 
-        this.sph = new register8();
-        this.spl = new register8();
+        this.ih = new register8();
+        this.il = new register8();
+        this.r = new register8();
 
+        this.mb = new register16();
+        this.sp = new register16();
         this.pc = new register16();
     }
 }
@@ -61,7 +44,7 @@ class register8
     data="";
     constructor()
     {
-        data="00000000"
+        this.data="00000000"
     }
     setbit = function(bit, val)
     {
@@ -89,21 +72,29 @@ class register16
     data="";
     constructor()
     {
-        data="0000000000000000"
+        this.data="0000000000000000"
     }
     seth = function(val)
     {
+        let da = []
+        da = this.data.split('')
+        let vals = ""
         if(val>=0 && val<=255)
             vals = val.toString(2);
             for(let i=0; i<8; i++)
-                this.data[i]=vals[i]
+                da[i]=vals[i]
+        this.data = da.toString().replace(/,/g, '');
     }
     setl = function(val)
     {
+        let da = []
+        da = this.data.split('')
+        let vals = ""
         if(val>=0 && val<=255)
             vals = val.toString(2);
             for(let i=9; i<16; i++)
-                this.data[i]=vals[i]
+                da[i]=vals[i]
+        this.data = da.toString().replace(/,/g, '');
     }
     geth = function()
     {

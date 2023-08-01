@@ -1,0 +1,53 @@
+-- instructions --
+
+reg: Any 8 bit register.
+16bit: 16 bit number.
+8bit: 8 bit number.
+SP: Stack pointer.
+IX: 16 bit index register, refers to r7 and r8 combined.
+PC: Program Counter
+
+0x00: NOOP                          -> No Operation
+0x01: ADD       reg, 8bit/reg       -> reg = reg + 8bit/reg
+0x02: ADC       reg, 8bit/reg       -> reg = reg + 8bit/reg + c
+0x03: AND       reg, 8bit/reg       -> reg = reg & 8bit/reg
+0x04: OR        reg, 8bit/reg       -> reg = reg | 8bit/reg
+0x05: NOR       reg, 8bit/reg       -> reg = ~(reg | 8bit/reg)
+0x06: CMP       reg, 8bit/reg       -> reg = reg + 8bit/reg
+0x07: PUSH      8bit/reg            -> [--SP] = 8bit/reg
+0x08: POP       reg                 -> reg = [SP++]
+0x09: MW        reg, 8bit/reg       -> reg = 8bit/reg
+0x10: LW        reg, [IX/16bit]     -> reg = [IX/16bit]
+0x11: SW        [IX/16bit], reg     -> [IX/16bit] = reg
+0x12: LDA       16bit               -> IX = 16bit
+0x13: SBB       reg, 8bit/reg       -> reg = reg - 8bit/reg - b
+0x14: JNZ       8bit/reg            -> If 8bit/reg is not zero, then set program counter to IX
+
+-- Registers --
+0:  A:  GP Register
+1:  B:  GP Register
+2:  C:  GP Register
+3:  D:  GP Register
+2:  R:  GP Register / Return Value
+5:  IH: GP Register / Index High
+6:  IL: GP Register / Index Low
+7:  F:  Flags Register 
+    LESS
+    EQUAL
+    CARRY
+    OVERFLOW
+
+-- Instruction Format --
+Instructions are: XXXXYZZZ:
+    X: Instruction Number
+    Y: 1 if register, 0 if 8bit or 16bit number
+    Z: Register identifier
+
+-- Memory Map --
+0x0000 - 0x7FFF: GP ROM
+0x8000 - 0xBFFF: GP RAM (Banked)
+0xC000 - 0xFEFF: GP RAM
+0xFF00 - 0xFFF9: Stack (or GP RAM)
+0xFFFA - 0xFFFB: Memory Bank
+0xFFFC - 0xFFFD: Stack Pointer
+0xFFFE - 0xFFFF: Program Counter
