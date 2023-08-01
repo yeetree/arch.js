@@ -8,36 +8,46 @@ class display {
 
     constructor()
     {
+        //get canvas for video and get 2d context
         this.canvas = document.getElementById("screen"),
         this.ctx = this.canvas.getContext("2d");
 
+        //set resolution
         this.canvas.width = 256;
         this.canvas.height = 256;
 
+        //set to black
         this.ctx.fillStyle="#0x00";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     RefreshVideo = function(buffer)
     {
-        oldbuf=this.ctx.getImageData(0,0,this.canvas.width,this.canvas.height);
-        newbuf=[];
-        for(i=0; i<oldbuf.data.length/4; i++)
+        //get old buffer from 2d context (we're not using the old pixel data, but it has
+        //some nessecary information that we need to plug it back into the 2d context)
+        let oldbuf=this.ctx.getImageData(0,0,this.canvas.width,this.canvas.height);
+        let newbuf=[];
+
+        //loop through every pixel and get each RGB value from the buffer
+        //from the color pallete defined below
+        for(let i=0; i<oldbuf.data.length/4; i++)
         {
-            pxcol=hex2rgb(this.colors[buffer[i]])
+            let pxcol=hex2rgb(this.colors[buffer[i]])
             newbuf.push(pxcol.r)
             newbuf.push(pxcol.g)
             newbuf.push(pxcol.b)
             newbuf.push(255)
         }
+        //overwrite old buffer pixel data with our updated one
         oldbuf.data.set(newbuf);
+        //push our new buffer to the 2d context
         this.ctx.putImageData(oldbuf,0,0)
     }
     
     colors = [
-        '#400000', '#400000', '#400900', '#234000', '#004000', '#004000', '#004000',
+        '#000000', '#400000', '#400000', '#400900', '#234000', '#004000', '#004000', '#004000',
         '#000d40', '#000040', '#000040', '#000040', '#000040', '#280040', '#400003',
-        '#400000', '#000000', '#540000', '#540000', '#541d00', '#375400', '#005400',
+        '#400000', '#540000', '#540000', '#541d00', '#375400', '#005400',
         '#005400', '#005402', '#002154', '#000054', '#000054', '#000054', '#000054',
         '#3c0054', '#540017', '#540000', '#0d0d0d', '#680000', '#680000', '#683100',
         '#4b6800', '#006800', '#006800', '#006816', '#003568', '#001168', '#000068',
@@ -75,6 +85,7 @@ class display {
     ]
 }
 
+//This converts a hex string to RGB values
 const hex2rgb = (hex) => {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
