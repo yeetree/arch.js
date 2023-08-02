@@ -12,7 +12,7 @@ PC: Program Counter
 0x02: ADC       reg, 8bit/reg       -> reg = reg + 8bit/reg + c
 0x03: AND       reg, 8bit/reg       -> reg = reg & 8bit/reg
 0x04: OR        reg, 8bit/reg       -> reg = reg | 8bit/reg
-0x05: NOR       reg, 8bit/reg       -> reg = ~(reg | 8bit/reg)
+0x05: SUB       reg, 8bit/reg       -> reg = reg - 8bit/reg
 0x06: CMP       reg, 8bit/reg       -> reg = reg + 8bit/reg
 0x07: PUSH      8bit/reg            -> [--SP] = 8bit/reg
 0x08: POP       reg                 -> reg = [SP++]
@@ -20,8 +20,9 @@ PC: Program Counter
 0x10: LW        reg, [IX/16bit]     -> reg = [IX/16bit]
 0x11: SW        [IX/16bit], reg     -> [IX/16bit] = reg
 0x12: LDA       16bit               -> IX = 16bit
-0x13: SBB       reg, 8bit/reg       -> reg = reg - 8bit/reg - b
-0x14: JNZ       8bit/reg            -> If 8bit/reg is not zero, then set program counter to IX
+0x13: JNZ       8bit/reg            -> If 8bit/reg is not zero, then set program counter to IX
+0x14: INB       reg, [PORT]         -> reg <- [PORT]
+0x15: OUTB      reg, [PORT]         -> reg -> [PORT]
 
 -- Registers --
 0:  A:  GP Register
@@ -32,7 +33,7 @@ PC: Program Counter
 5:  IH: GP Register / Index High
 6:  IL: GP Register / Index Low
 7:  F:  Flags Register 
-    LESS
+    ZERO
     EQUAL
     CARRY
     OVERFLOW

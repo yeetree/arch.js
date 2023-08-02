@@ -9,7 +9,7 @@ class registers {
     c=null;
     d=null;
 
-    ix=null;
+    ih=null;
     il=null;
     r=null;
 
@@ -48,8 +48,12 @@ class register8
     }
     setbit = function(bit, val)
     {
+        let da = []
+        da = this.data.split('')
         if(bit >= 0 && bit <= 7 && (val==0 || val==1))
-            this.data[bit] = val;
+            da[bit] = val;
+            this.data=da.toString().replace(/,/g, '');
+        
     }
     getbit = function(bit)
     {
@@ -76,25 +80,27 @@ class register16
     }
     seth = function(val)
     {
-        let da = []
-        da = this.data.split('')
-        let vals = ""
+        let l = []
+        let vals = []
         if(val>=0 && val<=255)
             vals = val.toString(2);
-            for(let i=0; i<8; i++)
-                da[i]=vals[i]
-        this.data = da.toString().replace(/,/g, '');
+            while(vals.length < 8)
+                vals = "0" + vals;
+            for(let i=8; i<16; i++)
+                l[i]=this.data[i]
+            this.data=vals + l.join('');
     }
     setl = function(val)
     {
-        let da = []
-        da = this.data.split('')
-        let vals = ""
+        let h = []
+        let vals = []
         if(val>=0 && val<=255)
             vals = val.toString(2);
-            for(let i=9; i<16; i++)
-                da[i]=vals[i]
-        this.data = da.toString().replace(/,/g, '');
+            while(vals.length < 8)
+                vals = "0" + vals;
+            for(let i=0; i<8; i++)
+                h[i]=this.data[i]
+            this.data=h.join('') + vals;
     }
     geth = function()
     {
@@ -107,7 +113,7 @@ class register16
     getl = function()
     {
         let vals = "";
-        for(let i=9; i<16; i++)
+        for(let i=8; i<16; i++)
             vals+=this.data[i];
 
         return parseInt(vals, 2);
@@ -115,7 +121,14 @@ class register16
     set = function(val)
     {
         if(val >= 0 && val <= 65535)
-            this.data = val.toString(2);
+        {
+            let vals = val.toString(2);
+            while(vals.length < 16)
+            {
+                vals = "0" + vals;
+            }
+            this.data = vals;
+        }
     }
     get = function()
     {

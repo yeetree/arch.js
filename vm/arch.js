@@ -12,6 +12,8 @@ class arch
     ptr = null;
     noop = null;
 
+    do = true;
+
     constructor()
     {
         //initiate components
@@ -22,14 +24,12 @@ class arch
         this.video = new display();
         this.reg = new registers();
 
-        this.ptr = -1;
-
         //get storage
         if(localStorage.getItem("slot1") === null)
             localStorage.setItem("slot1", this.storage.data);
         else
         {
-            let tmp = localStorage.getItem("slot1").replace(/,/g, '');
+            let tmp = localStorage.getItem("slot1").split(',');
             let tmpn = [];
 
             for(let i=0; i<tmp.length; i++)
@@ -38,38 +38,186 @@ class arch
             this.storage.load(tmpn);
         }
 
-        //load first 512 bytes into memory
-        for(let i=0; i<512; i++)
-            this.ram.set(i, this.storage.get(i));
+        this.getmem();
 
         //start cpu
-        this.cycle();
+        this.start();
 
     }
 
-    cycle = function()
+
+    start = async function()
     {
-        this.getmem();
-        //process current instruction at program pointer
-        this.process();
-        //refresh video from vram
-        this.setmem();
-        
-        this.video.RefreshVideo(this.vram.data);
-        //if reached end of memory, stop
-        //if(this.ptr != this.ram.data.length - 1)
-            //this.cycle();
+        let insts = {
+            nop:   "0000",
+            add:   "0001",
+            adc:   "0010",
+            and:   "0011",
+            or:    "0100",
+            sub:   "0101",
+            cmp:   "0110",
+            push:  "0111",
+            pop:   "1000",
+            mw:    "1001",
+            lw:    "1010",
+            sw:    "1011",
+            lda:   "1100",
+            jnz:   "1101",
+            inb:   "1110",
+            outb:  "1111",
+        }
+
+        while(this.do)
+        {
+            this.setmem();
+
+            let mov = 1;
+
+            //process instruction
+            let byte = this.memmap.get(this.reg.pc.get()).toString(2)
+            let byte2 = this.memmap.get(this.reg.pc.get() + 1).toString(2)
+
+            while(byte.length < 8)
+                byte = "0" + byte
+
+            while(byte2.length < 8)
+                byte2 = "0" + byte2
+
+            let inst = "";
+            let regi = "";
+            let regr = null;
+            let val = null;
+
+            for(let i=0; i<4; i++)
+                inst+=byte[i];
+
+            for(let i=5; i<8; i++)
+                regi+=byte[i];
+
+            regr = this.getregbybin(regi)
+
+            if(byte[4]=="1")
+            {
+                val = this.getregbybin(byte2).get();
+            }
+            else
+            {
+                val = parseInt(byte2, 2);
+            }
+
+            console.log(inst + " " + val)
+
+            switch(inst)
+            {
+                case insts.nop:
+                    break;
+                case insts.add:
+                    //ADD
+                    if(regr.get() + val <= 255)
+                        regr.set(regr.get() + val)
+                    else
+                        regr.set(255)
+                    mov+=1;
+                    break;
+                case insts.adc:
+                    //ADD WITH CARRY
+                    if(regr.get() + val <= 255)
+                    {
+                        regr.set(regr.get() + val);
+                        this.reg.f.setbit(1,0)
+                    }   
+                    else
+                    {
+                        regr.set(255)
+                        this.reg.f.setbit(1,1)
+                    }
+                    mov+=1;
+                    break;
+                case insts.and:
+                    //BITWISE AND
+                    regr.set(regr.get() & val)
+                    mov+=1
+                    break;
+                case insts.or:
+                    //BITWISE OR
+                    regr.set(regr.get() | val)
+                    mov+=1
+                    break;
+                case insts.sub:
+                    //SUBTRACT
+                    if(regr.get() - val >= 0)
+                        regr.set(regr.get() - val)
+                    else;
+                        regr.set(0)
+                    mov+=1;
+                    break;
+                case insts.cmp:
+                    //CMP
+                    if(regr.get() == val)
+                        this.reg.f.setbit(3,1)
+                    else
+                        this.reg.f.setbit(3,0)
+                    mov+=1;
+                    break;
+                case insts.push:
+                    break;
+                case insts.pop:
+                    break;
+                case insts.mw:
+                    //MOVE WORD
+                    regr.set(val)
+                    mov+=1;
+                    break;
+                case insts.lw:
+                    break;
+                case insts.sw:
+                    break;
+                case insts.lda:
+                    break;
+                case insts.jnz:
+                    break;
+                case insts.inb:
+                    break;
+                case insts.outb:
+                    break;
+            }
+            this.reg.pc.set(this.reg.pc.get() + mov);
+    
+            this.getmem();
+            this.video.RefreshVideo(this.vram.data);
+    
+            if(this.reg.pc.get() >= this.memmap.data.length)
+            {
+                this.do=false;
+                break;
+            }
+
+            await sleep(1)
+        }
+
     }
 
-    process = function()
+    getregbybin = function(r)
     {
-        //increment prg pointer by one
-        this.ptr++;
-        //process instruction
-        switch(this.ram.get(this.ptr))
+        let v = parseInt(r, 2);
+        switch(v)
         {
             case 0:
-                break;
+                return this.reg.a;
+            case 1:
+                return this.reg.b;
+            case 2:
+                return this.reg.c;
+            case 3:
+                return this.reg.d;
+            case 4:
+                return this.reg.r;
+            case 5:
+                return this.reg.ih;
+            case 6:
+                return this.reg.il;
+            case 7:
+                return this.reg.f;
         }
     }
 
@@ -84,14 +232,21 @@ class arch
         this.memmap.set(65534, this.reg.pc.geth())
         this.memmap.set(65535, this.reg.pc.getl())
 
+        //Storage
         for(let i=0; i<32768; i++)
         {
             this.memmap.set(i, this.storage.get(i));
         }
-        for(let i=0; i<32762; i++)
+        //Banked RAM
+        for(let i=0; i<16252; i++)
         {
             let offset = getfromhl(this.memmap.get(65530), this.memmap.get(65531))
-            this.memmap.set(i+32767, this.ram.get(i+offset));
+            this.memmap.set(i+49019, this.ram.get(i+offset));
+        }
+        //Unbanked RAM
+        for(let i=0; i<16509; i++)
+        {
+            this.memmap.set(i+49020, this.ram.get(i));
         }
     }
 
@@ -119,4 +274,8 @@ function getfromhl(h, l)
     let data="";
     data+=h.toString(2) + l.toString(2);
     return parseInt(data, 2);
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
 }

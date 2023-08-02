@@ -15,6 +15,7 @@ class display {
         //set resolution
         this.canvas.width = 256;
         this.canvas.height = 256;
+        this.canvas.willReadFrequently = true;
 
         //set to black
         this.ctx.fillStyle="#0x00";

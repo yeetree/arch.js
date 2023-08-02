@@ -20,6 +20,14 @@ class memory {
     {
         this.data = mem;
     }
+    loadfrom(pt, mem)
+    {
+        let st = mem.split(',');
+        for(let i=0; i<mem.length; i++)
+        {
+            this.set(i+pt, mem[i])
+        }
+    }
     constructor(size)
     {
         this.data = Array(size).fill(0);
