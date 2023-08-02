@@ -229,6 +229,13 @@ class arch
                     this.memmap.set(val, regr.get());
                     break;
                 case insts.lda:
+                    let byte2 = this.memmap.get(this.reg.pc.get() + 1)
+                    let byte3 = this.memmap.get(this.reg.pc.get() + 2);
+
+
+                    mov+=2;
+                    this.reg.ih.set(byte2);
+                    this.reg.il.set(byte3);
                     break;
                 case insts.jnz:
                     if(val != 0)
@@ -302,7 +309,7 @@ class arch
         //Unbanked RAM
         for(let i=0; i<16509; i++)
         {
-            this.memmap.set(i+49020, this.ram.get(i+49020));
+            this.memmap.set(i+49020, this.ram.get(i+16251));
         }
     }
 

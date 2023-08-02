@@ -338,6 +338,21 @@ class asm {
                     str+="1"+reg+",";
 
                 return str;
+            case "lda":
+                if(ins.length != 2)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "1100";
+
+
+                let tmp = get16bitstr(ins[1]);
+
+                str+="0000,"+tmp+",";
+
+                return str;
             case "jnz":
                 if(ins.length != 2)
                 {
