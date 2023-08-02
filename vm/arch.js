@@ -8,11 +8,14 @@ class arch
     vram = null;
     video = null;
     reg = null;
+    ports = null;
     
     ptr = null;
     noop = null;
 
     do = true;
+
+    paused = false;
 
     constructor()
     {
@@ -23,6 +26,8 @@ class arch
         this.memmap = new memory(65536);
         this.video = new display();
         this.reg = new registers();
+
+        this.ports = new ports();
 
         //get storage
         if(localStorage.getItem("slot1") === null)
@@ -54,9 +59,14 @@ class arch
 
     }
 
+    stop = async function()
+    {
+        this.do = false;
+    }
 
     start = async function()
     {
+        this.do = true;
         let insts = {
             nop:   "0000",
             add:   "0001",
@@ -245,8 +255,13 @@ class arch
                     }
                     break;
                 case insts.inb:
+                    let v = await this.ports.out(val, this)
+                    regr.set(v)
+                    mov+=1;
                     break;
                 case insts.outb:
+                    this.ports.in(val, regr.get())
+                    mov+=1;
                     break;
             }
             this.reg.pc.set(this.reg.pc.get() + mov);
@@ -262,7 +277,6 @@ class arch
 
             await sleep(1)
         }
-
     }
 
     getregbybin = function(r)

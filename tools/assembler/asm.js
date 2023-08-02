@@ -373,6 +373,60 @@ class asm {
                     str+="1000"+",00000"+val+",";
 
                 return str;
+            case "inb":
+                if(ins.length != 3)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "1110";
+                reg = this.lookreg(ins[1])
+
+                if(reg == "0")
+                {
+                    console.log("First arg has to be register")
+                    return "-1";
+                }
+
+                val = this.lookreg(ins[2])
+
+                if(val == "0")
+                {
+                    let tmp = get8bitnum(ins[2]);
+                    str+="0"+reg+","+tmp.toString(2)+",";
+                }
+                else
+                    str+="1"+reg+",00000"+val+",";
+
+                return str;
+            case "outb":
+                if(ins.length != 3)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "1111";
+                reg = this.lookreg(ins[1])
+
+                if(reg == "0")
+                {
+                    console.log("First arg has to be register")
+                    return "-1";
+                }
+
+                val = this.lookreg(ins[2])
+
+                if(val == "0")
+                {
+                    let tmp = get8bitnum(ins[2]);
+                    str+="0"+reg+","+tmp.toString(2)+",";
+                }
+                else
+                    str+="1"+reg+",00000"+val+",";
+
+                return str;
         }
     }
 
