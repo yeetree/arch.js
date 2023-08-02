@@ -16,9 +16,20 @@ class memory {
         else
             return 0;
     }
-    load = function(mem)
+    load = function(slot)
     {
-        this.data = mem;
+        if(localStorage.getItem(slot) === null)
+            localStorage.setItem(slot, this.data);
+        else
+        {
+            let tmp = localStorage.getItem(slot).split(',');
+            let tmpn = [];
+
+            for(let i=0; i<tmp.length; i++)
+                tmpn[i] = parseInt(tmp[i]);
+
+            this.data=tmpn;
+        }
     }
     loadfrom(pt, mem)
     {

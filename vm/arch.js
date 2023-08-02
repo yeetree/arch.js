@@ -30,18 +30,7 @@ class arch
         this.ports = new ports();
 
         //get storage
-        if(localStorage.getItem("slot1") === null)
-            localStorage.setItem("slot1", this.storage.data);
-        else
-        {
-            let tmp = localStorage.getItem("slot1").split(',');
-            let tmpn = [];
-
-            for(let i=0; i<tmp.length; i++)
-                tmpn[i] = parseInt(tmp[i]);
-
-            this.storage.load(tmpn);
-        }
+        this.storage.load("slot1");
 
         //Set stack pointer to the default value
         this.reg.sp.set(65273);

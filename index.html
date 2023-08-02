@@ -4,6 +4,8 @@
     <title>Arch.JS</title>
     <link rel="stylesheet" type="text/css" href="./vm/style.css">
 
+    <script type="text/javascript" src="./vm/vm.js"></script>
+
     <script type="text/javascript" src="./vm/display.js"></script>
     <script type="text/javascript" src="./vm/memory.js"></script>
     <script type="text/javascript" src="./vm/registers.js"></script>
@@ -15,6 +17,21 @@
     <div id="screen-container">
         <canvas id="screen"></canvas>
     </div>
+    <div class="dropdown">
+        <button class="dropbtn">Options</button>
+        <div class="dropdown-content">
+            <h3>Save/Load Storage</h3>
+            <p>Storage Slot</p>
+            <input type="text" id="slot" value="slot1"></input>
+            <a onclick="saveStorage()">Save Storage</a>
+            <a onclick="loadStorage()">Load Storage</a>
+            <a onclick="archjs.storage = new memory(65536);">Reset Storage</a>
+            <h3>Insert Storage</h3>
+            <input type="number" id="where" value="" placeholder="where"></input>
+            <input type="text" id="what" value="" placeholder="what"></input>
+            <a onclick="insertStorage();">Insert</a>
+        </div>
+    </div> 
     <textarea readonly rows=10 cols=61 id="console"></textarea>
     <script>
         archjs = new arch();
