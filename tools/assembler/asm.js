@@ -16,6 +16,7 @@ class asm {
                 return "ERROR";
             if(newi != "-2")
                 this.outb+=newi;
+                console.log(newi);
         }
 
         let outn = "";
@@ -187,7 +188,7 @@ class asm {
                     return "-1";
                 }
 
-                str = "0101";
+                str = "0110";
                 reg = this.lookreg(ins[1])
 
                 if(reg == "0")
@@ -205,6 +206,45 @@ class asm {
                 }
                 else
                     str+="1"+reg+",00000"+val+",";
+
+                return str;
+            case "push":
+                if(ins.length != 2)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "0111";
+
+                val = this.lookreg(ins[1])
+
+                if(val == "0")
+                {
+                    let tmp = parseInt(ins[1]);
+                    str+="0000"+","+tmp.toString(2)+",";
+                }
+                else
+                    str+="1000"+",00000"+val+",";
+
+                return str;
+            case "pop":
+                if(ins.length != 2)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "1000";
+                reg = this.lookreg(ins[1])
+
+                if(reg == "0")
+                {
+                    console.log("First arg has to be register")
+                    return "-1";
+                }
+
+                str+="0"+reg+",";
 
                 return str;
             case "mw":
@@ -234,7 +274,26 @@ class asm {
                     str+="1"+reg+",00000"+val+",";
 
                 return str;
-            
+            case "jnz":
+                if(ins.length != 2)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "1101";
+
+                val = this.lookreg(ins[1])
+
+                if(val == "0")
+                {
+                    let tmp = parseInt(ins[1]);
+                    str+="0000"+","+tmp.toString(2)+",";
+                }
+                else
+                    str+="1000"+",00000"+val+",";
+
+                return str;
         }
     }
 

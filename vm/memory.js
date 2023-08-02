@@ -23,10 +23,18 @@ class memory {
     loadfrom(pt, mem)
     {
         let st = mem.split(',');
-        for(let i=0; i<mem.length; i++)
+        let stn = []
+        for(let i=0; i<st.length; i++)
+            stn[i] = parseInt(st[i]);
+
+        for(let i=0; i<stn.length; i++)
         {
-            this.set(i+pt, mem[i])
+            this.set(i+pt, stn[i])
         }
+    }
+    save = function(slot)
+    {
+        localStorage.setItem(slot, this.data);
     }
     constructor(size)
     {

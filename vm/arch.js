@@ -38,6 +38,9 @@ class arch
             this.storage.load(tmpn);
         }
 
+        //Set stack pointer to the default value
+        this.reg.sp.set(65273);
+
         this.getmem();
 
         //start cpu
@@ -160,8 +163,29 @@ class arch
                     mov+=1;
                     break;
                 case insts.push:
+                    if(this.reg.sp.get() < 65529)
+                    {
+                        this.ram.set(this.reg.sp.get(), val);
+                        this.reg.sp.set(this.reg.sp.get() + 1);
+                        this.reg.f.setbit(7, 0)
+                    }
+                    else
+                    {
+                        this.reg.f.setbit(7, 1)
+                    }
+                    mov+=1;
                     break;
                 case insts.pop:
+                    if(this.reg.sp.get() > 65273)
+                    {
+                        this.reg.sp.set(this.reg.sp.get() - 1);
+                        regr.set(this.ram.get(this.reg.sp.get()));
+                        this.reg.f.setbit(7, 0)
+                    }
+                    else
+                    {
+                        this.reg.f.setbit(7, 1)
+                    }
                     break;
                 case insts.mw:
                     //MOVE WORD
@@ -175,6 +199,11 @@ class arch
                 case insts.lda:
                     break;
                 case insts.jnz:
+                    if(val != 0)
+                    {
+                        mov = 0;
+                        this.reg.pc.set(getfromhl(this.reg.ih.get(), this.reg.il.get()));
+                    }
                     break;
                 case insts.inb:
                     break;
@@ -241,12 +270,12 @@ class arch
         for(let i=0; i<16252; i++)
         {
             let offset = getfromhl(this.memmap.get(65530), this.memmap.get(65531))
-            this.memmap.set(i+49019, this.ram.get(i+offset));
+            this.memmap.set(i+32768, this.ram.get(i+offset));
         }
         //Unbanked RAM
         for(let i=0; i<16509; i++)
         {
-            this.memmap.set(i+49020, this.ram.get(i));
+            this.memmap.set(i+49020, this.ram.get(i+49020));
         }
     }
 
