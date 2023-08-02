@@ -1,0 +1,17 @@
+!,This is a simple test to see if labels work;
+!,After coding the truth machine without labels;
+!,I realized that if I actually wanted to do anything with Arch.js, I needed labels;
+
+!,Loads the location of the "loop" label into the index registers;
+
+lda,:loop;
+mw,a,'A';
+
+!,Defines where that label actually is. (By the way, these can be anything as long as they dont contain
+!,commas or semicolons. Just keep in mind how the assembler works.)
+
+label,loop;
+outb,a,0;
+
+!,Jumps;
+jnz,1;

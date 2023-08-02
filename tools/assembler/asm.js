@@ -2,10 +2,18 @@ class asm {
     lines=[];
     outb="";
 
+    curptr=0
+
+    labn=[];
+    labptr=[];
+
     compile = function(inp)
     {
         this.lines=[]
         this.outb=""
+        this.labn=[];
+        this.labptr=[];
+        this.curptr=0;
 
         this.lines=inp.split(';')
 
@@ -25,7 +33,29 @@ class asm {
         for(let i=0; i<outba.length; i++)
         {
             let tmp = parseInt(outba[i], 2)
-            outn+=tmp.toString()+",";
+            if(outba[i][0] == ":")
+            {
+                let gotlabel = false;
+                for(let e=0; e<this.labn.length; e++)
+                {
+                    if(this.labn[e] == outba[i].substring(1))
+                    {
+
+                        gotlabel = true;
+                        let bin2 = get16bitstr(this.labptr[e]);
+                        let tmp2 = bin2.split(',');
+                        let num1 = parseInt(tmp2[0], 2);
+                        let num2 = parseInt(tmp2[1], 2);
+                        outn+=num1.toString() + "," + num2.toString() + ","
+                    }
+                }
+                if(!gotlabel)
+                    return "ERROR: Label doesn't exist.";
+            }
+            else
+            {
+                outn+=tmp.toString()+",";
+            }
         }
         outn = outn.slice(0, -1); 
         return outn;
@@ -49,6 +79,7 @@ class asm {
             default:
                 return "-1";
             case "noop":
+                this.curptr+=1;
                 return "00000000,";
             case "add":
                 if(ins.length != 3)
@@ -76,6 +107,7 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "adc":
                 if(ins.length != 3)
@@ -103,6 +135,7 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "and":
                 if(ins.length != 3)
@@ -129,7 +162,8 @@ class asm {
                 }
                 else
                     str+="1"+reg+",00000"+val+",";
-
+                
+                this.curptr+=2;
                 return str;
             case "or":
                 if(ins.length != 3)
@@ -157,6 +191,7 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "sub":
                 if(ins.length != 3)
@@ -184,6 +219,7 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "cmp":
                 if(ins.length != 3)
@@ -211,6 +247,7 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "push":
                 if(ins.length != 2)
@@ -231,6 +268,7 @@ class asm {
                 else
                     str+="1000"+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "pop":
                 if(ins.length != 2)
@@ -250,6 +288,7 @@ class asm {
 
                 str+="0"+reg+",";
 
+                this.curptr+=1;
                 return str;
             case "mw":
                 if(ins.length != 3)
@@ -277,6 +316,7 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "lw":
                 if(ins.length != 3)
@@ -303,10 +343,11 @@ class asm {
                 {
                     let tmp = get16bitstr(ins[2]);
 
-
+                    this.curptr+=2;
                     str+="0"+reg+","+tmp+",";
                 }
                 else
+                    this.curptr+=1;
                     str+="1"+reg+",";
 
                 return str;
@@ -337,9 +378,11 @@ class asm {
 
 
                     str+="0"+reg+","+tmp+",";
+                    this.curptr+=2;
                 }
                 else
                     str+="1"+reg+",";
+                    this.curptr+=1;
 
                 return str;
             case "lda":
@@ -356,6 +399,7 @@ class asm {
 
                 str+="0000,"+tmp+",";
 
+                this.curptr+=3;
                 return str;
             case "jnz":
                 if(ins.length != 2)
@@ -376,6 +420,7 @@ class asm {
                 else
                     str+="1000"+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "inb":
                 if(ins.length != 3)
@@ -403,6 +448,7 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
                 return str;
             case "outb":
                 if(ins.length != 3)
@@ -430,6 +476,18 @@ class asm {
                 else
                     str+="1"+reg+",00000"+val+",";
 
+                this.curptr+=2;
+                return str;
+
+            case "label":
+                if(ins.length != 2)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                this.labn.push(ins[1]);
+                this.labptr.push(this.curptr);
                 return str;
         }
     }
@@ -497,6 +555,14 @@ function get16bitstr(num)
     if(num[0] == "#")
     {
         tm = parseInt(num.substring(1), 16);
+    }
+    else if(num == "$")
+    {
+        tm = this.curptr;
+    }
+    else if(num[0] == ":")
+    {
+        return num;
     }
     if(isNaN(tm))
         tm=0;

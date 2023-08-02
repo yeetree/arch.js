@@ -1,0 +1,28 @@
+!,This is a simple truth machine, but with labels!;
+!,This time, I used labels so I don't have to keep track of memory locations;
+!,Since this compiles to the exact same code, I'm not going to include a binary just for this version.
+
+!,Input character and display it;
+inb,a,0;
+outb,a,0;
+
+!,See if it is equal to '1';
+!,This sets the flags register to 2 if it is equal;
+!,If not, it will be set to 0;
+cmp,a,'1';
+
+!,If it is, jump past next code block;
+lda,:true;
+jnz,f;
+
+!,Else, do nothing;
+label,false;
+lda,:false;
+jnz,1;
+
+!,forever print '1';
+label,true;
+lda,:true;
+mw,a,'1';
+outb,a,0;
+jnz,1;
