@@ -33,10 +33,11 @@ PC: Program Counter
 5:  IH: GP Register / Index High
 6:  IL: GP Register / Index Low
 7:  F:  Flags Register 
-    ZERO
-    EQUAL
-    CARRY
-    OVERFLOW
+    0: Good
+    1: ZERO
+    2: EQUAL
+    3: CARRY
+    4: OVERFLOW
 
 -- Instruction Format --
 Instructions are: XXXXYZZZ:

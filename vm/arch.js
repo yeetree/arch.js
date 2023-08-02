@@ -132,12 +132,12 @@ class arch
                     if(regr.get() + val <= 255)
                     {
                         regr.set(regr.get() + val);
-                        this.reg.f.setbit(1,0)
+                        this.reg.f.set(0)
                     }   
                     else
                     {
                         regr.set(255)
-                        this.reg.f.setbit(1,1)
+                        this.reg.f.set(3)
                     }
                     mov+=1;
                     break;
@@ -162,9 +162,9 @@ class arch
                 case insts.cmp:
                     //CMP
                     if(regr.get() == val)
-                        this.reg.f.setbit(3,1)
+                        this.reg.f.set(2)
                     else
-                        this.reg.f.setbit(3,0)
+                        this.reg.f.set(0)
                     mov+=1;
                     break;
                 case insts.push:
@@ -172,11 +172,11 @@ class arch
                     {
                         this.ram.set(this.reg.sp.get(), val);
                         this.reg.sp.set(this.reg.sp.get() + 1);
-                        this.reg.f.setbit(7, 0)
+                        this.reg.f.set(0)
                     }
                     else
                     {
-                        this.reg.f.setbit(7, 1)
+                        this.reg.f.set(4)
                     }
                     mov+=1;
                     break;
@@ -185,11 +185,11 @@ class arch
                     {
                         this.reg.sp.set(this.reg.sp.get() - 1);
                         regr.set(this.ram.get(this.reg.sp.get()));
-                        this.reg.f.setbit(7, 0)
+                        this.reg.f.set(0)
                     }
                     else
                     {
-                        this.reg.f.setbit(7, 1)
+                        this.reg.f.set(4)
                     }
                     break;
                 case insts.mw:
@@ -241,6 +241,12 @@ class arch
                     {
                         mov = 0;
                         this.reg.pc.set(getfromhl(this.reg.ih.get(), this.reg.il.get()));
+                        console.log("jump: " + getfromhl(this.reg.ih.get(), this.reg.il.get()))
+                    }
+                    else
+                    {
+                        console.log("nojump: " + getfromhl(this.reg.ih.get(), this.reg.il.get()))
+                        mov+=1;
                     }
                     break;
                 case insts.inb:
