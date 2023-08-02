@@ -41,6 +41,12 @@ class arch
         //Set stack pointer to the default value
         this.reg.sp.set(65273);
 
+        //Load storage on startup
+        for(let i=0; i<32768; i++)
+        {
+            this.memmap.set(i, this.storage.get(i));
+        }
+
         this.getmem();
 
         //start cpu
@@ -193,8 +199,34 @@ class arch
                     mov+=1;
                     break;
                 case insts.lw:
+                    if(byte[4]=="1")
+                    {
+                        val = getfromhl(this.reg.ih.get(), this.reg.il.get());
+                    }
+                    else
+                    {
+                        let byte2 = this.memmap.get(this.reg.pc.get() + 1)
+                        let byte3 = this.memmap.get(this.reg.pc.get() + 2);
+
+                        val = getfromhl(byte2, byte3);
+                        mov+=2;
+                    }
+                    regr.set(this.memmap.get(val));
                     break;
                 case insts.sw:
+                    if(byte[4]=="1")
+                    {
+                        val = getfromhl(this.reg.ih.get(), this.reg.il.get());
+                    }
+                    else
+                    {
+                        let byte2 = this.memmap.get(this.reg.pc.get() + 1)
+                        let byte3 = this.memmap.get(this.reg.pc.get() + 2);
+
+                        val = getfromhl(byte2, byte3);
+                        mov+=2;
+                    }
+                    this.memmap.set(val, regr.get());
                     break;
                 case insts.lda:
                     break;
@@ -261,11 +293,6 @@ class arch
         this.memmap.set(65534, this.reg.pc.geth())
         this.memmap.set(65535, this.reg.pc.getl())
 
-        //Storage
-        for(let i=0; i<32768; i++)
-        {
-            this.memmap.set(i, this.storage.get(i));
-        }
         //Banked RAM
         for(let i=0; i<16252; i++)
         {
@@ -290,10 +317,23 @@ class arch
         this.reg.pc.seth(this.memmap.get(65534));
         this.reg.pc.setl(this.memmap.get(65535));
 
+        /*
         for(let i=0; i<32762; i++)
         {
             let offset = getfromhl(this.memmap.get(65530), this.memmap.get(65531))
             this.ram.set(i+offset, this.memmap.get(i+32767));
+        }*/
+        
+        //Banked RAM
+        for(let i=0; i<16252; i++)
+        {
+            let offset = getfromhl(this.memmap.get(65530), this.memmap.get(65531))
+            this.ram.set(i+offset, this.memmap.get(i+32768));
+        }
+        //Unbanked RAM
+        for(let i=0; i<16509; i++)
+        {
+            this.ram.set(i+49020, this.memmap.get(i+49020));
         }
     }
 }
@@ -301,7 +341,15 @@ class arch
 function getfromhl(h, l)
 {
     let data="";
-    data+=h.toString(2) + l.toString(2);
+    let low = l.toString(2);
+    let high = h.toString(2);
+
+    while(low.length < 8)
+        low = "0" + low;
+    while(high.length < 8)
+        high = "0" + high;
+
+    data+=high + low;
     return parseInt(data, 2);
 }
 

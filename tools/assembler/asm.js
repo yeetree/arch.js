@@ -66,7 +66,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[2]);
+                    let tmp = get8bitnum(ins[2]);
                     str+="0"+reg+","+tmp.toString(2)+",";
                 }
                 else
@@ -93,7 +93,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[2]);
+                    let tmp = get8bitnum(ins[2]);
                     str+="0"+reg+","+tmp.toString(2)+",";
                 }
                 else
@@ -120,7 +120,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[2]);
+                    let tmp = get8bitnum(ins[2]);
                     str+="0"+reg+","+tmp.toString(2)+",";
                 }
                 else
@@ -147,7 +147,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[2]);
+                    let tmp = get8bitnum(ins[2]);
                     str+="0"+reg+","+tmp.toString(2)+",";
                 }
                 else
@@ -174,7 +174,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[2]);
+                    let tmp = get8bitnum(ins[2]);
                     str+="0"+reg+","+tmp.toString(2)+",";
                 }
                 else
@@ -201,7 +201,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[2]);
+                    let tmp = get8bitnum(ins[2]);
                     str+="0"+reg+","+tmp.toString(2)+",";
                 }
                 else
@@ -221,7 +221,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[1]);
+                    let tmp = get8bitnum(ins[1]);
                     str+="0000"+","+tmp.toString(2)+",";
                 }
                 else
@@ -267,11 +267,75 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[2]);
+                    let tmp = get8bitnum(ins[2]);
                     str+="0"+reg+","+tmp.toString(2)+",";
                 }
                 else
                     str+="1"+reg+",00000"+val+",";
+
+                return str;
+            case "lw":
+                if(ins.length != 3)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "1010";
+                reg = this.lookreg(ins[1])
+
+                if(reg == "0")
+                {
+                    console.log("First arg has to be register")
+                    return "-1";
+                }
+
+                if(ins[2].toLowerCase() == "ix")
+                    val="1"
+                else
+                    val="0"
+
+                if(val == "0")
+                {
+                    let tmp = get16bitstr(ins[2]);
+
+
+                    str+="0"+reg+","+tmp+",";
+                }
+                else
+                    str+="1"+reg+",";
+
+                return str;
+            case "sw":
+                if(ins.length != 3)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                str = "1011";
+                reg = this.lookreg(ins[2])
+
+                if(reg == "0")
+                {
+                    console.log("First arg has to be register")
+                    return "-1";
+                }
+
+                if(ins[1].toLowerCase() == "ix")
+                    val="1"
+                else
+                    val="0"
+
+                if(val == "0")
+                {
+                    let tmp = get16bitstr(ins[1]);
+
+
+                    str+="0"+reg+","+tmp+",";
+                }
+                else
+                    str+="1"+reg+",";
 
                 return str;
             case "jnz":
@@ -287,7 +351,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = parseInt(ins[1]);
+                    let tmp = get8bitnum(ins[1]);
                     str+="0000"+","+tmp.toString(2)+",";
                 }
                 else
@@ -321,4 +385,39 @@ class asm {
                 return "0";
         }
     }
+}
+
+function get8bitnum(num)
+{
+    let tm = parseInt(num);
+    if(tm<0)
+        return 0;
+    else if(tm>255)
+        return 255;
+    else
+        return tm;
+}
+
+function get16bitstr(num)
+{
+    let tm = parseInt(num);
+    if(tm<0)
+        return "00000000,00000000";
+    else if(tm>65535)
+        return "11111111,11111111";
+
+    let bin = tm.toString(2);
+
+    while(bin.length < 16)
+        bin = "0" + bin;
+
+    let num1 = ""
+    let num2 = ""
+
+    for(let i=0; i<8; i++)
+        num1+=bin[i];
+    for(let i=8; i<16; i++)
+        num2+=bin[i];
+
+    return num1 + "," + num2;
 }
