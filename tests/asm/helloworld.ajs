@@ -1,36 +1,38 @@
-mw,a,72;
+!,This is the hello world program! isn't it cool?;
+
+mw,a,'H';
 outb,a,0;
 
-mw,a,101;
+mw,a,'e';
 outb,a,0;
 
-mw,a,108;
+mw,a,'l';
 outb,a,0;
 outb,a,0;
 
-mw,a,111;
+mw,a,'o';
 outb,a,0;
 
-mw,a,44;
+mw,a,'CM';
 outb,a,0;
 
-mw,a,32;
+mw,a,'SP';
 outb,a,0;
 
-mw,a,87;
+mw,a,'W';
 outb,a,0;
 
-mw,a,111;
+mw,a,'o';
 outb,a,0;
 
-mw,a,114;
+mw,a,'r';
 outb,a,0;
 
-mw,a,108;
+mw,a,'l';
 outb,a,0;
 
-mw,a,100;
+mw,a,'d';
 outb,a,0;
 
-mw,a,33;
+mw,a,'!';
 outb,a,0;
