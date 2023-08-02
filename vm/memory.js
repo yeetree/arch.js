@@ -30,6 +30,7 @@ class memory {
 
             this.data=tmpn;
         }
+        localStorage.setItem("load",slot);
     }
     loadfrom(pt, mem)
     {
@@ -45,6 +46,7 @@ class memory {
     }
     save = function(slot)
     {
+        localStorage.setItem("load", slot);
         localStorage.setItem(slot, this.data);
     }
     constructor(size)

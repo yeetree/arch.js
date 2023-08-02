@@ -25,11 +25,6 @@ class ports
 
 class port
 {
-    constructor()
-    {
-
-    }
-
     in = async function(num)
     {
 
@@ -43,6 +38,12 @@ class port
 
 class consoletty extends port
 {
+    constructor() {
+        super();
+        var term = document.getElementById("console");
+        term.innerHTML = "";
+        term.outerHTML = term.outerHTML;
+    }
     ascii = [
         '','&#01;','&#02;','&#03;','&#04;','&#05;','&#06;','&#;07',
         '&#08;','&#09;','&#10;','&#11;','&#12;','&#13;','&#14;','&#15;',

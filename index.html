@@ -20,6 +20,10 @@
     <div class="dropdown">
         <button class="dropbtn">Options</button>
         <div class="dropdown-content">
+            <h3>Start/Stop Machine</h3>
+            <a onclick="archjs.stop();">Stop</a>
+            <a onclick="archjs.start();">Start</a>
+            <a onclick="archjs.stop(); archjs = new arch();">Reset</a>
             <h3>Save/Load Storage</h3>
             <p>Storage Slot</p>
             <input type="text" id="slot" value="slot1"></input>
