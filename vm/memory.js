@@ -7,8 +7,9 @@ class memory {
     readonly=false;
     set = function(loc, val)
     {
-        if(loc >= 0 && loc <= this.data.length - 1)
-            this.data[loc] = val;
+        if(!this.readonly)
+            if(loc >= 0 && loc <= this.data.length - 1)
+                this.data[loc] = val;
     }
     get = function(loc)
     {
@@ -46,7 +47,7 @@ class memory {
 
         for(let i=0; i<stn.length; i++)
         {
-            this.set(i+pt, stn[i])
+            this.data[i+pt] = stn[i];
         }
     }
     save = function(slot)
