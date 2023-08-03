@@ -22,7 +22,7 @@ class arch
         //initiate components
         this.storage = new memory(32767);
         this.ram = new memory(65536);
-        this.vram = new memory(65536);
+        this.vram = new memory(36864);
         this.memmap = new memory(65536);
         this.video = new display();
         this.reg = new registers();
@@ -262,7 +262,7 @@ class arch
                     mov+=1;
                     break;
                 case insts.outb:
-                    this.ports.in(val, regr.get())
+                    this.ports.in(val, regr.get(), this)
                     mov+=1;
                     break;
             }

@@ -13,8 +13,8 @@ class display {
         this.ctx = this.canvas.getContext("2d");
 
         //set resolution
-        this.canvas.width = 256;
-        this.canvas.height = 256;
+        this.canvas.width = 192;
+        this.canvas.height = 192;
         this.canvas.willReadFrequently = true;
 
         //set to black
