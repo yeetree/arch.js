@@ -1,7 +1,13 @@
 #screen {
-    width: 512px;
-    height: 512px;
+    width: 768px;
+    height: 768px;
     image-rendering: pixelated; image-rendering: crisp-edges;
+}
+
+#console {
+  position: absolute;
+  top: 40px;
+  left: 775px;
 }
 
 .dropbtn {
@@ -18,7 +24,7 @@
     position: absolute;
     display: block;
     top: 8px;
-    left: 530px;
+    left: 775px;
   }
   
   /* Dropdown Content (Hidden by Default) */
