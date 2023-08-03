@@ -7,6 +7,8 @@ class asm {
     labn=[];
     labptr=[];
 
+    offset=0;
+
     compile = function(inp)
     {
         this.lines=[]
@@ -14,6 +16,7 @@ class asm {
         this.labn=[];
         this.labptr=[];
         this.curptr=0;
+        this.offset=0;
 
         this.lines=inp.split(';')
 
@@ -42,7 +45,7 @@ class asm {
                     {
 
                         gotlabel = true;
-                        let bin2 = get16bitstr(this.labptr[e]);
+                        let bin2 = get16bitstr(this.labptr[e], 0);
                         let tmp2 = bin2.split(',');
                         let num1 = parseInt(tmp2[0], 2);
                         let num2 = parseInt(tmp2[1], 2);
@@ -341,7 +344,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = get16bitstr(ins[2]);
+                    let tmp = get16bitstr(ins[2], this.offset);
 
                     this.curptr+=2;
                     str+="0"+reg+","+tmp+",";
@@ -374,7 +377,7 @@ class asm {
 
                 if(val == "0")
                 {
-                    let tmp = get16bitstr(ins[1]);
+                    let tmp = get16bitstr(ins[1], this.offset);
 
 
                     str+="0"+reg+","+tmp+",";
@@ -395,7 +398,7 @@ class asm {
                 str = "1100";
 
 
-                let tmp = get16bitstr(ins[1]);
+                let tmp = get16bitstr(ins[1], this.offset);
 
                 str+="0000,"+tmp+",";
 
@@ -488,7 +491,16 @@ class asm {
 
                 this.labn.push(ins[1]);
                 this.labptr.push(this.curptr);
-                return str;
+                return "-2";
+            case "org":
+                if(ins.length != 2)
+                {
+                    console.log("Invalid amount of args")
+                    return "-1";
+                }
+
+                this.offset = get16bitoff(ins[1]);
+                return "-2";
         }
     }
 
@@ -542,19 +554,19 @@ function get8bitnum(num)
         return tm;
 }
 
-function get16bitstr(num)
+function get16bitstr(num, offset)
 {
-    let tm = parseInt(num);
+    let tm = parseInt(num) + offset;
     for(let i=0; i<asciistr.length; i++)
     {
         if(num==asciistr[i])
         {
-            tm = asciistr.indexOf(num)
+            tm = asciistr.indexOf(num) + offset;
         }
     }
     if(num[0] == "#")
     {
-        tm = parseInt(num.substring(1), 16);
+        tm = parseInt(num.substring(1), 16) + offset;
     }
     else if(num == "$")
     {
@@ -585,6 +597,34 @@ function get16bitstr(num)
         num2+=bin[i];
 
     return num1 + "," + num2;
+}
+
+function get16bitoff(num)
+{
+    let tm = parseInt(num);
+    for(let i=0; i<asciistr.length; i++)
+    {
+        if(num==asciistr[i])
+        {
+            tm = asciistr.indexOf(num)
+        }
+    }
+    if(num[0] == "#")
+    {
+        tm = parseInt(num.substring(1), 16);
+    }
+    else if(num == "$")
+    {
+        tm = this.curptr;
+    }
+    if(isNaN(tm))
+        tm=0;
+    if(tm<0)
+        return 0;
+    else if(tm>65535)
+        return 65535;
+
+    return tm;
 }
 
 asciistr = [

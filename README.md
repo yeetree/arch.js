@@ -137,3 +137,4 @@ Here are all of the instructions:
 Special Assembler instructions:
 * `!,` -- Defines a comment. MUST BE IN THIS FORMAT: `!,Comment here;` 
 * `label, name` -- Creates reference to the memory location at the label. Does not have to be set before referencing it.
+* `org, 16bit` -- Adds 16bit to every 16bit number referenced going forwards, except for labels and program counter.

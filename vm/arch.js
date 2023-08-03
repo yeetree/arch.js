@@ -37,7 +37,9 @@ class arch
         {
             tmp = localStorage.getItem("load");
         }
+
         this.storage.load(tmp);
+        this.storage.readonly = true;
 
         //Set stack pointer to the default value
         this.reg.sp.set(65273);
@@ -48,7 +50,7 @@ class arch
             this.memmap.set(i, this.storage.get(i));
         }
 
-        this.getmem();
+        //this.setmem();
 
         //start cpu
         this.start();
@@ -84,7 +86,7 @@ class arch
 
         while(this.do)
         {
-            this.setmem();
+            this.getmem();
 
             let mov = 1;
 
@@ -113,7 +115,14 @@ class arch
 
             if(byte[4]=="1")
             {
-                val = this.getregbybin(byte2).get();
+                try
+                {
+                    val = this.getregbybin(byte2).get();
+                }
+                catch
+                {
+                    val = parseInt(byte2, 2);
+                }
             }
             else
             {
@@ -268,7 +277,7 @@ class arch
             }
             this.reg.pc.set(this.reg.pc.get() + mov);
     
-            this.getmem();
+            this.setmem();
             this.video.RefreshVideo(this.vram.data);
     
             if(this.reg.pc.get() >= this.memmap.data.length)
@@ -307,15 +316,20 @@ class arch
 
     getmem = function()
     {
-        this.memmap.set(65530, this.reg.mb.geth())
-        this.memmap.set(65531, this.reg.mb.getl())
+        this.reg.mb.seth(this.memmap.get(65530));
+        this.reg.mb.setl(this.memmap.get(65531));
 
-        this.memmap.set(65532, this.reg.sp.geth())
-        this.memmap.set(65533, this.reg.sp.getl())
+        this.reg.sp.seth(this.memmap.get(65532));
+        this.reg.sp.setl(this.memmap.get(65533));
 
-        this.memmap.set(65534, this.reg.pc.geth())
-        this.memmap.set(65535, this.reg.pc.getl())
+        this.reg.pc.seth(this.memmap.get(65534));
+        this.reg.pc.setl(this.memmap.get(65535));
 
+        //Storage
+        for(let i=0; i<32768; i++)
+        {
+            this.memmap.set(i, this.storage.get(i));
+        }
         //Banked RAM
         for(let i=0; i<16252; i++)
         {
@@ -331,14 +345,14 @@ class arch
 
     setmem = function()
     {
-        this.reg.mb.seth(this.memmap.get(65530));
-        this.reg.mb.setl(this.memmap.get(65531));
+        this.memmap.set(65530, this.reg.mb.geth())
+        this.memmap.set(65531, this.reg.mb.getl())
 
-        this.reg.sp.seth(this.memmap.get(65532));
-        this.reg.sp.setl(this.memmap.get(65533));
+        this.memmap.set(65532, this.reg.sp.geth())
+        this.memmap.set(65533, this.reg.sp.getl())
 
-        this.reg.pc.seth(this.memmap.get(65534));
-        this.reg.pc.setl(this.memmap.get(65535));
+        this.memmap.set(65534, this.reg.pc.geth())
+        this.memmap.set(65535, this.reg.pc.getl())
 
         /*
         for(let i=0; i<32762; i++)

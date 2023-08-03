@@ -4,6 +4,7 @@
 
 class memory {
     data = [];
+    readonly=false;
     set = function(loc, val)
     {
         if(loc >= 0 && loc <= this.data.length - 1)
