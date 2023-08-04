@@ -24,7 +24,10 @@ class asm {
         {
             let newi = this.getinst(this.lines[i]);
             if(newi == "-1")
+            {
+                console.log(this.lines);
                 return "ERROR: Check Console. Line:" + i;
+            }
             if(newi != "-2")
                 this.outb+=newi;
                 console.log(newi);

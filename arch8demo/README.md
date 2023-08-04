@@ -127,8 +127,8 @@ Here are all of the instructions:
 * `PUSH, reg/8bit` -- Pushes reg/8bit onto the stack.
 * `POP, reg` -- Pops stack and stores value in reg.
 * `MW, reg, reg/8bit` -- Sets reg to reg/8bit.
-* `LW, reg, [IX/16bit]` -- Loads from address [IX/16bit] and stores it in reg.
-* `SW, [IX/16bit], reg` -- Stores reg in address [IX/16bit].
+* `LW, reg, [INX/16bit]` -- Loads from address [INX/16bit] and stores it in reg.
+* `SW, [INX/16bit], reg` -- Stores reg in address [INX/16bit].
 * `LDA, 16bit` -- Sets index high and low registers to 16bi.
 * `JNZ, reg/8bit` -- Sets program counter to index high and low if reg/8bit is not zero.
 * `INB, reg, PORT` -- Requests a byte from PORT and stores it in reg.
