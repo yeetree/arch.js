@@ -1,188 +1,120 @@
------- Registers -------
-
-0 is reserved for telling instructions to look for memory addresses.
-
-16 Bit Registers:
-
-1: ax: General Purpose (16 bit)
-
-2: bx: General Purpose (16 bit)
-
-3: cx: General Purpose (16 bit)
-
-4: dx: General Purpose (16 bit)
-
-5: r: Return / General Purpose (16 bit)
-
-6: sp: Stack Pointer (16 bit)
-
-7: bp: Base Pointer (16 bit)
-
-8: f: Flags (16 bit)
-
-9: pc: Program Counter (16 bit)
 
 
-8 Bit Registers:
+----------- MEMORY MAP: ------------
 
-1: ah (ax): General Purpose (8 bit)
-2: al (ax): General Purpose (8 bit)
-
-3: bh (bx): General Purpose (8 bit)
-4: bl (bx): General Purpose (8 bit)
-
-5: ch (cx): General Purpose (8 bit)
-6: cl (cx): General Purpose (8 bit)
-
-7: dh (dx): General Purpose (8 bit)
-8: dl (dx): General Purpose (8 bit)
-
-9: rh (r): General Purpose (8 bit)
-10: rl (r): General Purpose (8 bit)
-
-11: s: Memory Bank (8 bit)
+	0 - 511:		INTERRUPT VECTOR TABLE
+	512 - 61439: 	WORKING RAM
+	61440 - 65535:	BIOS
 
 
-------------------------
+----------- IO MAP: ------------
+
+	0:		SERIAL PORT
+	1:		KEYBOARD PORT
+	2:		DISK PORT
+	3:		GRAPHICS PORT
 
 
--- Instruction Format --
+------------ REGISTERS: ------------
 
-XXXXXXXXYYYYZZZZ:
-    -X: Operation Code
-    -Y: Argument 1 (Most always a register)
-    -Z: Argument 2 (Most always a register)
-    
-------------------------
+	0:		F 	- FLAGS
+	1:		PC 	- PROGRAM COUNTER
+	2:		SP 	- STACK POINTER
+	3:		BP 	- BASE POINTER
+	4:		I 	- INDEX
+	5:		A 	- GP
+	6:		B 	- GP
+	7:		C 	- GP
+	8:		D 	- GP
+
+	9: 	W	- 'WHOOPS' REGISTER (Accident Prevention)
+
+	ANY OTHER REGISTER ADDRESSED WILL BE ROUTED TO W REGISTER
+
+	
+
+------------ FLAGS: ----------------
+
+	S - U - Z - U - P - U - C - U
+	U - U - U - U - U - U - U - I
+
+	S: Sign Flag, if last operation resulted in positive or negative (0 = POS, 1 = NEG)
+	Z: Zero Flag, if last operation resulted in zero (0 = NOT, 1 = ZERO)
+	P: Parity Flag, if last operation resulted in odd or even (0 = ODD, 1 = EVEN)
+	C: Carry Flag, if last operation resulted in a carry (0 = NO CARRY, 1 = CARRY)
+
+	I: Interrupt Flag, whether or not CPU accepts interrupts from other devices
+	
+
+--------- ARGUMENT TYPES -----------
+
+	0000:	reg16 - register will be chosen by next 8 bits
+	0001:	reg8 (h) - register will be chosen by next 8 bits, but modifying high section
+	0010:	reg8 (l) - register will be chosen by next 8 bits, but modifying low section
+	0011:	imm16 - immediate value will be chosen by next 16 bits
+	0100:	imm8 - immediate value will be chosen by next 8 bits
+
+	0101: 	whoops - copies next word to W register and reference to W register (Accident Prevention)
+	
+	ANY OTHER ARGUMENT TYPE WILL BE ROUTED TO 'whoops' TYPE
 
 
----- Argument Types ----
+------- INSTRUCTION FORMAT: --------
 
-reg8   -   8 bit register
-reg16  -   16 bit register
-mem8   -   memory byte
-mem16  -   memory word
-imm8   -   8 bit immediate
-imm16  -   16 bit immediate
+	* First Argument MUST be a register
+	* No references to memory
 
-------------------------
+	XXXXXXXX-YYYYZZZZ AAAAAAAA-AAAAAAAA BBBBBBBB-BBBBBBBB
+		X: OP CODE
+		Y: ARGUMENT 1 TYPE
+		Z: ARGUMENT 2 TYPE
+
+		A: ARGUMENT 1 VALUE
+		B: ARGUMENT 2 VALUE
 
 
------ Instructions -----
+--------- INSTRUCTIONS: ------------
 
-$00: NOP
+	$00:	NOP
 
-$01: ADD    reg8/mem8,      reg8/mem8
-$02: ADD    reg16/mem16,    reg16/mem16
-$03: ADD    reg8/mem8,      imm8
-$04: ADD    reg16/mem16,    imm16
-$05: ADD    reg16/mem16,    imm8
+	$01:	ADD		DEST : reg16/reg8		SOURCE : ANY
+	$02:	ADC		DEST : reg16/reg8		SOURCE : ANY
+	$03:	AND		DEST : reg16/reg8		SOURCE : ANY
+	$04:	OR		DEST : reg16/reg8		SOURCE : ANY
+	$05:	XOR		DEST : reg16/reg8		SOURCE : ANY
+	$06:	SUB		DEST : reg16/reg8		SOURCE : ANY
+	$07:	SBB		DEST : reg16/reg8		SOURCE : ANY
+	$08:	MUL		DEST : reg16/reg8		SOURCE : ANY
+	$09:	IMUL	DEST : reg16/reg8		SOURCE : ANY
+	$A:		DIV		DEST : reg16/reg8		SOURCE : ANY
+	$B:		IDIV	DEST : reg16/reg8		SOURCE : ANY
+	$C:		NOT		DEST : reg16/reg8		SOURCE : ANY
+	$D:		NEG		DEST : reg16/reg8		SOURCE : ANY
+	$E:		INC		DEST : reg16/reg8		SOURCE : ANY
+	$F:		DEC		DEST : reg16/reg8		SOURCE : ANY
 
-$06: ADC    reg8/mem8,      reg8/mem8
-$07: ADC    reg16/mem16,    reg16/mem16
-$08: ADC    reg8/mem8,      imm8
-$09: ADC    reg16/mem16,    imm16
-$0A: ADC    reg16/mem16,    imm8
+	$10:	MOV		DEST : reg16/reg8		SOURCE : ANY
 
-$0B: AND    reg8/mem8,      reg8/mem8
-$0C: AND    reg16/mem16,    reg16/mem16   
-$0D: AND    reg8/mem8,      imm8
-$0E: AND    reg16/mem16,    imm16
-$0F: AND    reg16/mem16,    imm8
+	$11:	CMP		DEST : reg16/reg8		SOURCE : ANY
 
-$10: OR     reg8/mem8,      reg8/mem8
-$11: OR     reg16/mem16,    reg16/mem16     
-$12: OR     reg8/mem8,      imm8
-$13: OR     reg16/mem16,    imm16
-$14: OR     reg16/mem16,    imm8
+	$12:	PUSH	SOURCE : ANY
+	$13:	POP		SOURCE : ANY
 
-$15: XOR    reg8/mem8,      reg8/mem8
-$16: XOR    reg16/mem16,    reg16/mem16     
-$17: XOR    reg8/mem8,      imm8
-$18: XOR    reg16/mem16,    imm16
-$19: XOR    reg16/mem16,    imm8
+	$14:	JMP		ADDRESS : ANY
+	$15:	JE		ADDRESS : ANY
+	$16:	JNE		ADDRESS : ANY
+	$17:	JZ		ADDRESS : ANY
+	$18:	JNZ		ADDRESS : ANY
+	$19:	JC		ADDRESS : ANY
+	$1A:	JNC		ADDRESS : ANY
+	$1B:	JO		ADDRESS : ANY
+	$1C:	JNO		ADDRESS : ANY
 
-$1A: SUB    reg8/mem8,      reg8/mem8
-$1B: SUB    reg16/mem16,    reg16/mem16    
-$1C: SUB    reg8/mem8,      imm8
-$1D: SUB    reg16/mem16,    imm16
-$1E: SUB    reg16/mem16,    imm8
+	$1D:	INB		DEST : reg16/reg8		PORT : ANY
+	$1E:	INW		DEST : reg16/reg8		PORT : ANY
 
-$1F: SBB    reg8/mem8,      reg8/mem8
-$20: SBB    reg16/mem16,    reg16/mem16    
-$21: SBB    reg8/mem8,      imm8
-$22: SBB    reg16/mem16,    imm16
-$23: SBB    reg16/mem16,    imm8
+	$1F:	OUTB	DEST : reg16/reg8		PORT : ANY
+	$20:	OUTW	DEST : reg16/reg8		PORT : ANY
 
-$24: MUL    reg8/mem8
-$25: MUL    reg16/mem16
-
-$26: IMUL   reg8/mem8
-$27: IMUL   reg16/mem16
-
-$28: DIV    reg8/mem8
-$29: DIV    reg16/mem16
-
-$2A: IDIV   reg8/mem8
-$2B: IDIV   reg16/mem16
-
-$2C: NOT    reg8/mem8
-$2D: NOT    reg16/mem16
-
-$2E: NEG    reg8/mem8
-$2F: NEG    reg16/mem16
-
-$30: INC    reg8/mem8
-$31: INC    reg16/mem16
-
-$32: DEC    reg8/mem8
-$33: DEC    reg16/mem16
-
-$34: CMP    reg8/mem8,      reg8/mem8
-$35: CMP    reg16/mem16,    reg16/mem16
-$36: CMP    reg8/mem8,      imm8
-$37: CMP    reg16/mem16,    imm16
-$38: CMP    reg16/mem16,    imm8
-
-$39: PUSH   reg16/mem16
-$3A: PUSH   imm16
-$3B: POP    reg16/mem16
-
-$3C: CALL   [reg16/mem16]
-$3D: CALL   [imm16]
-$3E: RET
-
-$3F: JMP    [reg16/mem16]
-$40: JMP    [imm16]
-
-$41: JE     [reg16/mem16]
-$42: JE     [imm16]
-
-$43: JNE    [reg16/mem16]
-$44: JNE    [imm16]
-
-$45: JZ     [reg16/mem16]
-$46: JZ     [imm16]
-
-$47: JNZ    [reg16/mem16]
-$48: JNZ    [imm16]
-
-$49: JC     [reg16/mem16]
-$4A: JC     [imm16]
-
-$4B: JNC    [reg16/mem16]
-$4C: JNC    [imm16]
-
-$4D: INW    reg16/mem16,    PORT[imm16]
-$4E: INW    imm16,          PORT[imm16]
-
-$4F: OUTW   reg16/mem16,    PORT[imm16]
-$4G: OUTW   imm16,          PORT[imm16]
-
-$4D: INW    reg8/mem8,      PORT[imm16]
-$4E: INW    imm8,           PORT[imm16]
-
-$4F: OUTW   reg8/mem8,      PORT[imm16]
-$50: OUTW   imm8,           PORT[imm16]
-
-------------------------
+	$21:	CALL	ADDRESS : ANY
+	$22:	RET
