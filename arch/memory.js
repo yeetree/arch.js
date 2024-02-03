@@ -3,50 +3,35 @@ class memory {
     data = [];
     readonly = false;
 
-    constructor(size)
+    constructor(size, reado = false)
     {
         this.data = Array(size).fill(0);
+        this.readonly = reado;
     }
 
-    setbyte = function(loc, val)
+    setbyte = function(loc, val, force = false)
     {
         //Sets a byte in this memory.
         //If the location is in bounds and this storage isn't readonly, continue.
-        if(loc >= 0 && loc < this.data.length && !this.readonly)
-            //If the value is greater than 255, then just set it to 255
-            if(val > 255)
-                this.data[loc] = 255;
-            //If it is less than zero, then just set it to zero
-            else if(val < 0)
-                this.data[loc] = 0;
-            //If neither, then set it to the value.
-            else
-                this.data[loc] = val;
+        if(loc >= 0 && loc < this.data.length) {
+            if(!this.readonly || force) {
+                // Wrap value (just in case)
+                this.data[loc] = wrap(256, val);
+            }
+        }
     }
-    setword = function(loc, val)
+    setword = function(loc, val, force = false)
     {
         //Sets a word in this memory.
         //If the location is in bounds and this storage isn't readonly, continue.
-        if(loc >= 0 && loc < this.data.length - 1 && !this.readonly)
-            //If the value is greater than 255, then just set it to 255
-            if(val > 65535)
-            {
-                this.data[loc] = 128;
-                this.data[loc+1] = 0;
-            }
-            //If it is less than zero, then just set it to zero
-            else if(val < 0)
-            {
-                this.data[loc] = 0;
-                this.data[loc+1] = 0;
-            }
-            //If neither, then set it to the value.
-            else
-            {
-                let hl = gethl(val)
+        if(loc >= 0 && loc < this.data.length - 1) {
+            if(!this.readonly || force) {
+                // Wrap value (just in case) and get high/low values
+                let hl = gethl(wrap(65536, val))
                 this.data[loc] = hl[0];
                 this.data[loc+1] = hl[1];
             }
+        }
     }
 
     getbyte = function(loc)
@@ -54,7 +39,7 @@ class memory {
         //This one is simple. If the location is in range, return
         //the data at the requested location
         if(loc >= 0 && loc < this.data.length)
-            return this.data[loc];
+            return wrap(256, this.data[loc]);
     }
 
     getword = function(loc)
