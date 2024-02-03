@@ -66,6 +66,7 @@ class memory {
     }
 }
 
+/* old getfromhl. New version in registers.js
 function getfromhl(h, l)
 {
     let data="";
@@ -80,7 +81,9 @@ function getfromhl(h, l)
     data+=high + low;
     return parseInt(data, 2);
 }
+*/
 
+/* old gethl. New version in registers.js
 function gethl(int)
 {
     //This splits the integer into two 8bit binary numbers,
@@ -104,4 +107,5 @@ function gethl(int)
     l = parseInt(lstr, 2);
 
     return [h, l];
-}
+}*/
+

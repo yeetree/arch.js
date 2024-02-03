@@ -21,13 +21,77 @@ class register16 {
         this.registers = reg;
     }
 
+    // Get value of registers
     get = function() {
-        return parseInt((this.high.toString(2).padStart(8, '0') + this.low.toString(2).padStart(8, '0')).split(''), 2)
+        return getfromhl(this.high, this.low)
     }
 
+    // Set value of registers
     set = function(value) {
         // Get current value
         let val = this.get();
+        let num = value
+
+        // If num is more than 16 bit limit (carry)
+        if(num > 65535) {
+            // SET CARRY FLAG HERE
+            this.registers.f.set8(true, 0);
+            this.registers.f.setbit(0, 1);
+            
+            // Wrap number
+            num = wrap(65536, num)
+        }
+
+        // If num is less than 16 bit limit (carry)
+        else if(num < 0) {
+            // SET CARRY FLAG HERE
+            this.registers.f.set8(true, 0);
+            this.registers.f.setbit(0, 1);
+            
+            // Wrap number
+            num = wrap(65536, num)
+        }
+        else {
+            // UNSET CARRY FLAG HERE
+            this.registers.f.set8(true, 0);
+            this.registers.f.setbit(0, 0);
+        }
+    }
+
+    // Get 8 bit subregister. hl = true: high, hl = false: low
+    get8 = function(hl = false) {
+        let reg = this.low
+        if(hl) { reg = this.high }
+
+        return wrap(256, reg)
+    }
+
+    // Set 8 bit subregister. hl = true: high, hl = false: low
+    set8 = function(hl = false, value) {
+        let val = this.low
+        if(hl) { val = this.high }
+
+        let num = value
+
+        // If num is more than 8 bit limit (carry)
+        if(num > 255) {
+            // SET CARRY FLAG HERE
+            
+            // Wrap number
+            num = wrap(256, num)
+        }
+
+        // If num is less than 8 bit limit (carry)
+        if(num < 0) {
+            // SET CARRY FLAG HERE
+            
+            // Wrap number
+            num = wrap(256, num)
+        }
+
+        let numa = gethl(num);
+        this.high = numa[0];
+        this.low = numa[1];
     }
 
     setbit = function(bit, value) {
@@ -42,4 +106,46 @@ class register16 {
         this.high = parseInt(bstring.substring(0,8), 2);
         this.low = parseInt(bstring.substring(8,16), 2);
     }
+
+    getbit = function(bit) {
+        // Gets 16 bit binary array of high and low values
+        let bstring = (this.high.toString(2).padStart(8, '0') + this.low.toString(2).padStart(8, '0')).split('')
+        
+        if(bstring[bit] == '1') { return true }
+        else { return false }
+    }
+}
+
+function wrap(m, n) {
+    return n >= 0 ? n % m : (n % m + m) % m
+}
+
+function getfromhl(h, l) {
+    h = wrap(256, h)
+    l = wrap(256, l)
+
+    return (h << 8) | l;
+}
+
+function gethl(value) {
+    let num = value
+
+    // If num is more than 16 bit
+    if(num > 65535) {
+        // Wrap number
+        num = wrap(65536, num)
+    }
+
+    // If num is less than 16 bit
+    if(num < 0) {     
+        // Wrap number
+        num = wrap(65536, num)
+    }
+
+    let numstring = num.toString(2).padStart(16, '0')
+
+    let num1 = parseInt(numstring.slice(0, 8), 2)
+    let num2 = parseInt(numstring.slice(8), 2)
+
+    return [num1, num2]
 }
