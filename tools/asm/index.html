@@ -2,19 +2,25 @@
     <head>
         <title>Arch.JS Simple Assembler</title>
         <script src="./asm.js"></script>
+        <script src="./asmtools.js"></script>
     </head>
     <body>
+        <p>Program</p>
         <textarea rows=30 cols=70 id="prg"></textarea>
+        <button onclick="asm.compile(prgBOX.value);">Compile</button>
+        <p>Output</p>
         <textarea rows=30 cols=70 id="compile" style="margin-right:true"></textarea>
+        <p>Log</p>
+        <textarea rows=30 cols=70 id="log" style="margin-right:true"></textarea>
         <script>
             prgBOX = document.getElementById("prg");
             compileBOX = document.getElementById("compile");
+            logBOX = document.getElementById("log");
             asm = new asm();
             function removeLineBreak(str) {
                 //return str.replaceAll(/(\r\n|\n|\r)/gm, " ").replaceAll(' ', "");
-                return str.replaceAll(/(\r\n|\n|\r)/gm, " ")
+                return str.replaceAll(/(\r\n|\n|\r)/gm, "")
             }
         </script>
-        <button onclick="compileBOX.value = asm.compile(removeLineBreak(prgBOX.value));">Compile</button>
     </body>
 </html>

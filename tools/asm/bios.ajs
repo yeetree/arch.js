@@ -1,0 +1,8 @@
+org 0xF000; ! BIOS starts at 0xF000
+
+jmp :bios
+
+
+dw 0; ! BIOS version. Found at 0xF004
+
+label bios

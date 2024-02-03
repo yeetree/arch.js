@@ -35,13 +35,14 @@
 
 ------------ FLAGS: ----------------
 
-	S - U - Z - U - P - U - C - U
+	S - U - Z - U - P - U - C - O
 	U - U - U - U - U - U - U - I
 
 	S: Sign Flag, if last operation resulted in positive or negative (0 = POS, 1 = NEG)
 	Z: Zero Flag, if last operation resulted in zero (0 = NOT, 1 = ZERO)
-	P: Parity Flag, if last operation resulted in odd or even (0 = ODD, 1 = EVEN)
+	P: Parity Flag, if lower byte of last operation result has odd or even amount of 1s (0 = ODD, 1 = EVEN)
 	C: Carry Flag, if last operation resulted in a carry (0 = NO CARRY, 1 = CARRY)
+	O: Overflow Flag, if last operation resulted in a overflow (0 = NO CARRY, 1 = CARRY)
 
 	I: Interrupt Flag, whether or not CPU accepts interrupts from other devices
 	
@@ -90,13 +91,13 @@
 	$B:		IDIV	DEST : reg16/reg8		SOURCE : ANY
 	$C:		NOT		DEST : reg16/reg8		SOURCE : ANY
 	$D:		NEG		DEST : reg16/reg8		SOURCE : ANY
-	$E:		INC		DEST : reg16/reg8		SOURCE : ANY
-	$F:		DEC		DEST : reg16/reg8		SOURCE : ANY
+	$E:		INC		DEST : reg16/reg8
+	$F:		DEC		DEST : reg16/reg8
 
 	$10:	LOAD	ADDRESS : ANY 			SOURCE : ANY
 	$11:	STORE	ADDRESS : ANY 			SOURCE : ANY
 
-	$12:	CMP		DEST : reg16/reg8		SOURCE : ANY
+	$12:	CMP		SOURCE : ANY			SOURCE : ANY
 
 	$13:	PUSH	SOURCE : ANY
 	$14:	POP		SOURCE : ANY
@@ -112,10 +113,10 @@
 	$1D:	JNO		ADDRESS : ANY
 
 	$1E:	INB		DEST : reg16/reg8		PORT : ANY
-	$1F:	INW		DEST : reg16/reg8		PORT : ANY
+	$1F:	INW		DEST : reg16			PORT : ANY
 
-	$20:	OUTB	DEST : reg16/reg8		PORT : ANY
-	$21:	OUTW	DEST : reg16/reg8		PORT : ANY
+	$20:	OUTB	SOURCE : reg8			PORT : ANY
+	$21:	OUTW	SOURCE : reg16/reg8		PORT : ANY
 
 	$22:	CALL	ADDRESS : ANY
 	$23:	RET
