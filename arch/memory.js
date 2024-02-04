@@ -83,14 +83,22 @@ class memory {
 
         for(let i=0; i<stn.length; i++)
         {
-            this.data[wrap(this.data.length, i+pt)] = stn[i];
+            let val = wrap(256, stn[i])
+            if(!val) {
+                val = 0;
+            }
+            this.data[wrap(this.data.length, i+pt)] = val;
         }
     }
     
-    save = function(slot)
+    save = function(slot, setload = true)
     {
-        localStorage.setItem("load", slot);
+        if(setload) { localStorage.setItem("load", slot); }
         localStorage.setItem(slot, this.data);
+    }
+
+    reset = function() {
+        this.data = Array(this.data.length).fill(0);
     }
 }
 

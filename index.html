@@ -3,6 +3,7 @@
         <title>Arch.js</title>
 
         <link rel="stylesheet" type="text/css" href="./style.css">
+        <script src="./vm.js"></script>
 
         <script src="./arch/addressable.js"></script>
         <script src="./arch/memory.js"></script>
@@ -15,8 +16,62 @@
     </head>
     <body>
         <textarea readonly rows=20 cols=80 id="console"></textarea>
+        <div class="vmbuttons">
+            <div class="dropdown">
+                <button class="dropbtn">System</button>
+                <div class="dropdown-content">
+                    <p>System Options</p>
+                    <a onclick="arch.stop();">Stop</a>
+                    <a onclick="arch.start();">Start</a>
+                    <a onclick="arch.stop(); arch = new archjs();">Reset</a>
+                    <a onclick="arch.step();">Step</a>
+                </div>
+            </div> 
+            <!--
+            <div class="dropdown">
+                <button class="dropbtn">Storage</button>
+                <div class="dropdown-content">
+                    <p>Storage Options</p>
+                    <input type="text" id="slot" value="slot1" placeholder="Storage Slot"></input>
+                    <a onclick="saveStorage()">Save Storage</a>
+                    <a onclick="loadStorage()">Load Storage</a>
+                    <a onclick="">Reset Storage</a>
+                    <p>Insert Data</p>
+                    <input type="number" id="storagewhere" value="" placeholder="where"></input>
+                    <input type="text" id="storagewhat" value="" placeholder="what"></input>
+                    <a onclick="insertStorage();">Insert</a>
+                </div>
+            </div>-->
+            <div class="dropdown">
+                <button class="dropbtn">RAM</button>
+                <div class="dropdown-content">
+                    <p>RAM Settings</p>
+                    <a onclick="arch.ram.reset();;">Reset RAM</a>
+                    <p>Insert Data</p>
+                    <input type="number" id="ramwhere" value="" placeholder="where"></input>
+                    <input type="text" id="ramwhat" value="" placeholder="what"></input>
+                    <a onclick="insertRAM();">Insert</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="dropbtn">BIOS</button>
+                <div class="dropdown-content">
+                    <p>BIOS Settings</p>
+                    <input type="text" id="bioswhat" value="" placeholder="what"></input>
+                    <a onclick="insertBIOS();">Flash BIOS</a>
+                </div>
+            </div>
+
+            <div class="info">
+                <p id="infopc">Program Counter: </p>
+            </div>
+        </div>
         <script>
             arch = new archjs();
+
+            updateInfo();
+            //arch.init();
         </script>
     </body>
 </html>

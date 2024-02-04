@@ -26,9 +26,17 @@ class archjs {
         this.io = new iomanager();
         this.cpumemory.data.push(this.ram, this.bios)
 
+        // Add devices
+        let term = new consoletty();
+        this.io.devices.push(term);
+
         // Set base and stack pointers to end of workingmemory
         this.registers.bp.set(61439);
         this.registers.sp.set(61439);
+
+        // Load BIOS
+        this.bios.load("bios");
+        this.bios.save("bios", false);
 
         // Set program counter to 61440 (bios);
         this.registers.pc.set(61440);
@@ -105,6 +113,8 @@ class archjs {
             popw:   0x26,
 
             mov:    0x27,
+
+            break:  0x28,
         }
 
         let types = {
@@ -1335,12 +1345,14 @@ class archjs {
 
                 arg1v = wrap(256, arg1v);
 
-                this.call(this.cpumemory.getword(arg1v * 2), mov);
+                if(arg1v != 0) {
+                    this.call(this.cpumemory.getword(arg1v * 2), mov);
 
-                // Set program counter to value
-                mov = 0 // No skip (we're already moving)
+                    // Set program counter to value
+                    mov = 0 // No skip (we're already moving)
 
-                pc = this.cpumemory.getword(arg1v * 2)
+                    pc = this.cpumemory.getword(arg1v * 2)
+                }
 
                 break;
 
@@ -1455,6 +1467,17 @@ class archjs {
                     arg1[1].set8(arg2v, false, true)
                 }
 
+                break;
+
+            case insts.break:
+                // Retrieve arguments and advance pointer however many bytes is necessary
+                args = this.getarguments(pc)
+                arg1 = args[0];
+                arg2 = args[1]
+                mov += arg1[2] + arg2[2]
+
+                this.stop();
+                
                 break;
         }
 

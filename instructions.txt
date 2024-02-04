@@ -10,9 +10,8 @@
 ----------- IO MAP: ------------
 
 	0:		SERIAL PORT
-	10:		KEYBOARD PORT
-	20:		DISK PORT
-	30:		GRAPHICS PORT
+	10:		DISK PORT
+	20:		GRAPHICS PORT
 
 
 ------------ REGISTERS: ------------
@@ -125,3 +124,5 @@
 	$26:	POPW	SOURCE : reg16
 
 	$27:	MOV		DEST : reg16/reg8		SOURCE : ANY
+
+	$28:	BREAK

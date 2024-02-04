@@ -13,7 +13,6 @@ class consoletty extends device {
         this.term = document.getElementById("console");
 
         this.term.addEventListener('keydown', this.keyhandler.bind(this), false);
-        console.log("added term")
     }
 
     ascii = [

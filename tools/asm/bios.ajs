@@ -7,15 +7,66 @@ dw 97;                              ! BIOS version. Found at 0xF004
 
 label bios;                         ! End of BIOS header
 
-org 0;                              ! Reset origin when accessing memory
-store 0 :getbiosver;                ! Set interrupt 0 to :getbiosver
+    org 0;                          ! Reset origin when accessing memory
 
-jmp 512;                            ! Jump to 512 when done
+    store 0x20 :getbiosver;         ! Set interrupt 10 to :getbiosver
 
-org 0xF000;                         ! Back to BIOS memory
+    store 0x22 :getcserial;         ! Set interrupt 11 to :getbiosver
+
+    jmp 512;                        ! Jump to 512 when done
+
+    org 0xF000;                     ! Back to BIOS memory
+
 
 label getbiosver;                   ! Get BIOS version
 
-load ax :biosver;                   ! Load from :biosver to ax
+    load ax :biosver;               ! Load from :biosver to ax
 
-ret;                                ! Make sure to return
+    ret;                            ! Make sure to return
+
+label getcserial;                   ! Wait for character
+
+    pushw cx;                       ! Push value of CX
+    mov cx 0;
+
+    mov ax 0;                       ! Set AX to 0
+
+    label getcserial_loop;
+
+    inw ax 0;                       ! Get current character
+    cmp ax 0;                       ! Compare with 0
+    jne :getcserial_end;            ! Exit loop if it is not 0
+
+    cmp cx 5;                       ! See if cx is 50
+    je :getcserial_cx0;
+
+    cmp cx 10;                      ! See if cx is 1000
+    je :getcserial_cx1;
+
+    add cx 1;
+
+    jmp :getcserial_loop;
+
+    label getcserial_cx0;
+        outb '_' 0;
+        add cx 1;
+        jmp :getcserial_loop
+
+    label getcserial_cx1;
+        outb 8 0;
+        mov cx 0;
+        jmp :getcserial_loop
+
+    label getcserial_end_cx1;
+        outb 8 0;
+        mov cx 0;
+        jmp :getcserial_end
+
+    label getcserial_end;
+
+    cmp cx 6;
+    je :getcserial_end_cx1;
+    jc :getcserial_end_cx1;
+
+    popw cx;
+    ret;                            ! Make sure to return

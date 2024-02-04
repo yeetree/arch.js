@@ -926,6 +926,20 @@ class asm {
 
                 return bstring;
                 break;
+
+            case "break":
+                // Check if we have enough arguments, and check that arguments are valid
+                if(argc != 1) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+
+                // Adds OPCODE and argument type codes (two bytes)
+                bstring =  "00101000,01010101,"; this.curptr += 2;
+
+                return bstring;
+                break;
+
+            default:
+                this.print("ASSEMBLER ERROR: Not an instruction"); this.err = true; return
+                break;
         }
     }
 }

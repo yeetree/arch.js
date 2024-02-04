@@ -6,9 +6,9 @@ function gettype(arg) {
     if(regstr8h.includes(arg)) { return "reg8h"; }
     if(regstr8l.includes(arg)) { return "reg8l"; }
 
-    // See if it is a special character
+    /* See if it is a special character
     if(arg == "$") { return "programcounter"; }
-    //if(arg == "$$") { return "programstart"; }
+    //if(arg == "$$") { return "programstart"; }*/
 
     // See if it is a label
     if(arg[0] == ":") {
@@ -173,7 +173,7 @@ function getargumentvalue(arg, pc, off = 0) {
         }
     }
 
-    if(type == "programcounter") {
+    /*if(type == "programcounter") {
         let num = pc + off
         if(num < 0) { asm.print("PARSER WARNING: Given number is not a 16 bit number and will be clamped"); num = 0; }
         if(num > 65535) { asm.print("PARSER WARNING: Given number is not a 16 bit number and will be clamped"); num = 65535; }
@@ -181,7 +181,7 @@ function getargumentvalue(arg, pc, off = 0) {
         let tstring = num.toString(2).padStart(16, '0');
         bstring += tstring.slice(0, 8) + "," + tstring.slice(8)
         plength = 2;
-    }
+    }*/
 
     return [bstring, plength]
 }
@@ -225,7 +225,7 @@ function is8bit(arg) {
 // Check if argument is 16 bit
 function is16bit(arg) {
     let argtype = gettype(arg)
-    if(argtype == "reg16" || argtype == "imm16" || argtype == "programcounter" || argtype == "programstart") { return true; }
+    if(argtype == "reg16" || argtype == "imm16" /*|| argtype == "programcounter"*/ || argtype == "programstart") { return true; }
     return false;
 }
 

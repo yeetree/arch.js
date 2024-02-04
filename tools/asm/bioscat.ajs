@@ -1,0 +1,8 @@
+org 0x200;              ! Set origin to 0x200 (just incase the assembler didnt)
+
+label loop;
+
+int 0x11;               ! Interrupt 11
+outw ax 0;              ! Output AX
+
+jmp :loop;
