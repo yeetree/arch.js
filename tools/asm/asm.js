@@ -14,7 +14,7 @@ class asm {
         if(thing) { this.log += "> " + thing.toString() + "\n\n"; }
     }
 
-    compile = function(inp, padend = 0)
+    compile = function(inp, padend = 0, bootable = false)
     {
         // Reset program pointer
         this.curptr = 0;
@@ -96,8 +96,29 @@ class asm {
                     numout[index] = num;
                 }
 
-                if(padend) {
-                    if(padend < numout.length) {
+                if(bootable) {
+                    if(510 < numout.length) {
+                        this.print("ASSEMBLY WARNING: Program Length exceeds 510 bytes. Program is not bootable. Program size is unchanged.")
+                    }
+                    else {
+                        numout.length = 512;
+                        for(let i = 0; i < numout.length; i++) {
+                            if(!numout[i]) {
+                                numout[i] = 0
+                            }
+                        }
+
+                        // Add boot signature (0xAA55)
+                        numout[510] = 170;
+                        numout[511] = 85;
+                    }
+                }
+
+                if(padend != 0) {
+                    if(bootable) {
+                        this.print("ASSEMBLY WARNING: Program is already set to bootable. Program size is unchanged.")
+                    }
+                    else if(padend < numout.length) {
                         this.print("ASSEMBLY WARNING: Program Length exceeds force length. Program size is unchanged.")
                     }
                     else {

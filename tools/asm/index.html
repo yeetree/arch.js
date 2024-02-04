@@ -7,9 +7,11 @@
     <body>
         <p>Program</p>
         <textarea rows=30 cols=70 id="prg"></textarea>
+        <p>Make Bootable</p>
+        <input id="bootable" type="checkbox"></input>
         <p>Force Length</p>
         <input id="length" type="number" value=0></input>
-        <button onclick="asm.compile(prgBOX.value, lenBOX.value);">Compile</button>
+        <button onclick="asm.compile(prgBOX.value, lenBOX.value, bootBOX.checked);">Compile</button>
         <p>Output</p>
         <textarea rows=30 cols=70 id="compile" style="margin-right:true"></textarea>
         <p>Log</p>
@@ -17,6 +19,7 @@
         <script>
             prgBOX = document.getElementById("prg");
             lenBOX = document.getElementById("length");
+            bootBOX = document.getElementById("bootable");
             compileBOX = document.getElementById("compile");
             logBOX = document.getElementById("log");
             asm = new asm();
