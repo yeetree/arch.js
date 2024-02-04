@@ -43,7 +43,7 @@ class addressable {
         return [memloc, memlocadd]
     }
 
-
+    // Sets a byte at given location
     setbyte = function(loc, val)
     {
         //Sets a byte in this memory.
@@ -54,9 +54,11 @@ class addressable {
 
         if(rloc[0] != -1) {
             // Wrap value (just in case)
-            this.data[rloc[0]].setbyte([rloc[1]], wrap(256, val));
+            this.data[rloc[0]].setbyte([rloc[1]], val);
         }
     }
+
+    // Sets a word at given location
     setword = function(loc, val)
     {
         //Sets a word in this memory.
@@ -64,13 +66,22 @@ class addressable {
 
         //Get real memory location
         let rloc = this.getreallocation(loc);
+        let rloc2 = this.getreallocation(loc + 1);
+
+        let hl = gethl(val);
 
         if(rloc[0] != -1) {
             // Wrap value (just in case)
-            this.data[rloc[0]].setword([rloc[1]], wrap(65536, val));
+            this.data[rloc[0]].setbyte([rloc[1]], hl[0]);
+        }
+
+        if(rloc[1] != -1) {
+            // Wrap value (just in case)
+            this.data[rloc2[0]].setbyte([rloc2[1]], hl[1]);
         }
     }
 
+    // Retrieves a byte at given location
     getbyte = function(loc)
     {
         //This one is simple. If the location is in range, return
@@ -83,6 +94,7 @@ class addressable {
             return this.data[rloc[0]].getbyte([rloc[1]]);
     }
 
+    // Retrieves a word at given location
     getword = function(loc)
     {
         //If the location is in range, return the data combined with the next data at the
@@ -92,6 +104,27 @@ class addressable {
         let rloc = this.getreallocation(loc);
 
         if(rloc[0] != -1)
-            return this.data[rloc[0]].getword([rloc[1]]);
+            return this.data[rloc[0]].getword(rloc[1]);
+    }
+
+    // Dumps all memory in the system
+    memdump = function() {
+        // Build memory map
+        let mmap = [];
+        let prevvalue = 0; 
+        let totallength = 0;
+        for(let i = 0; i < this.data.length; i++) {
+            mmap.push(this.data[i].data.length - 1 + prevvalue);
+            prevvalue += this.data[i].data.length + prevvalue;
+            totallength += this.data[i].data.length
+        }
+
+        let memdump = []
+
+        for(let i = 0; i < totallength; i++) {
+            memdump[i] = this.getbyte(i);
+        }
+
+        return memdump;
     }
 }

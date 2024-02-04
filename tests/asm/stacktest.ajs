@@ -1,0 +1,16 @@
+! This program tests stacks
+
+label loop;  ! define loop
+
+push 'C';    ! push some stuff
+push 'B';
+push 'A';
+
+pop al;      ! pop and print
+outb al 0;
+pop al;
+outb al 0;
+pop al;
+outb al 0;
+
+jmp :loop;   ! loop

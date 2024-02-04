@@ -2,7 +2,7 @@ class asm {
     // Variables for Assembler
     lines=[]; // All of the lines in the program
     curptr=0; // Current pointer
-    offset=0; // Pointer offset
+    offset=512; // Pointer offset
     err = false; // Has there been an error?
     log = ""; // Log
 
@@ -22,6 +22,8 @@ class asm {
         this.err = false;
         // Reset log
         this.log = "";
+        // Reset offset
+        this.offset = 512;
         // Reset lines
         this.lines=[];
         // Reset Labels
@@ -144,8 +146,6 @@ class asm {
                 type = gettype(line[1])
                 if(type != "imm8") { this.print("ASSEMBLER ERROR: Argument type is not imm8"); this.err = true; return } 
 
-                console.log(line[1])
-
                 bstring = getbyte(line[1]) + ","
                 this.curptr += 1
                 return bstring;
@@ -208,7 +208,7 @@ class asm {
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -223,13 +223,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00000100," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00000011," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -244,13 +244,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00000101," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00000100," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -265,13 +265,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00000110," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00000101," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -286,13 +286,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00000111," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00000110," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -307,13 +307,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001000," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00000111," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -328,13 +328,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001001," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00001000," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -349,13 +349,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001010," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00001001," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -370,13 +370,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001011," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00001010," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -391,13 +391,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001100," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00001011," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -405,43 +405,27 @@ class asm {
 
             case "not":
                 // Check if we have enough arguments, and check that arguments are valid
-                if(argc != 3) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
-                arg2t = gettype(line[2])
                 if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
-                if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
-            
+
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001101," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00001100," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
-
-                // Adds second value
-                arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
-                bstring += arg2v[0] + ","; this.curptr += arg2v[1];
-
                 return bstring;
                 break;
 
             case "neg":
-                // Check if we have enough arguments, and check that arguments are valid
-                if(argc != 3) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                 // Check if we have enough arguments, and check that arguments are valid
+                if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
-                arg2t = gettype(line[2])
                 if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
-                if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001110," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00001101," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
-
-                // Adds second value
-                arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
-                bstring += arg2v[0] + ","; this.curptr += arg2v[1];
-
                 return bstring;
                 break;
 
@@ -452,7 +436,7 @@ class asm {
                 if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00001111," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00001110," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
                 return bstring;
@@ -465,7 +449,7 @@ class asm {
                 if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00010000," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00001111," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
                 return bstring;
@@ -481,7 +465,7 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00010001," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00010000," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -507,10 +491,11 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00010010," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00010001," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
+                console.log(this.offset)
                 if (arg1v[0] == "") { this.err = true; return; break;}
                 bstring += arg1v[0] + ","; this.curptr += arg1v[1];
 
@@ -533,7 +518,7 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00010011," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00010010," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, 0)
@@ -554,10 +539,10 @@ class asm {
                 if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
                 
-                if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
+                if(arg1t != "reg8h" && arg1t != "reg8l"&& arg1t != "imm8") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or imm8"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring = "00010100," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring = "00010011," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, 0)
@@ -572,10 +557,10 @@ class asm {
                 if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
                 
-                if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
+                if(arg1t != "reg8h" && arg1t != "reg8l"&& arg1t != "imm8") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or imm8"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring = "00010101," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring = "00010100," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -593,7 +578,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring = "00010110," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring = "00010101," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -611,7 +596,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00010111," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00010110," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -629,7 +614,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00011000," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00010111," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -647,7 +632,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00011001," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00011000," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -665,7 +650,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00011010," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00011001," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -683,7 +668,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00011011," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00011010," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -701,7 +686,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00011110," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00011011," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -711,7 +696,7 @@ class asm {
                 return bstring;
                 break;
 
-            case "jo":
+            /*case "jo":
                 // Check if we have enough arguments, and check that arguments are valid
                 if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
@@ -719,7 +704,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00011111," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00011100," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -737,7 +722,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00100000," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00011101," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -746,7 +731,8 @@ class asm {
 
                 return bstring;
                 break;
-
+            */
+           
             case "inb":
                 // Check if we have enough arguments, and check that arguments are valid
                 if(argc != 3) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
@@ -754,15 +740,15 @@ class asm {
                 arg2t = gettype(line[2])
                 if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
-            
+
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00100001," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00011110," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -777,13 +763,13 @@ class asm {
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00100010," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                bstring =  "00011111," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)
                 bstring += getregistercode(line[1]) + ","; this.curptr += 1;
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -794,17 +780,19 @@ class asm {
                 if(argc != 3) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
                 arg2t = gettype(line[2])
-                if(arg1t != "reg8h" && arg1t != "reg8l") { this.print("ASSEMBLER ERROR: Argument type is not reg8"); this.err = true; return } 
+                if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "imm8") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or imm8"); this.err = true; return } 
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00100011," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
-                // Adds register code (one byte)
-                bstring += getregistercode(line[1]) + ","; this.curptr += 1;
+                bstring =  "00100000," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                // Adds first value
+                arg1v = getargumentvalue(line[1], this.curptr, 0)
+                if (arg1v[0] == "") { this.err = true; return; break;}
+                bstring += arg1v[0] + ","; this.curptr += arg1v[1];
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -815,17 +803,22 @@ class asm {
                 if(argc != 3) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
                 arg2t = gettype(line[2])
-                if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
+                
+                if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00100100," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
-                // Adds register code (one byte)
-                bstring += getregistercode(line[1]) + ","; this.curptr += 1;
+                bstring =  "00100001," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+
+                // Adds first value
+                arg1v = getargumentvalue(line[1], this.curptr, 0)
+                if (arg1v[0] == "") { this.err = true; return; break;}
+                bstring += arg1v[0] + ","; this.curptr += arg1v[1];
+
 
                 // Adds second value
                 arg2v = getargumentvalue(line[2], this.curptr, 0)
-                if (arg2v[0] != "") { this.err = true; return; break;}
+                if (arg2v[0] == "") { this.err = true; return; break;}
                 bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
@@ -839,7 +832,7 @@ class asm {
                 if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
             
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00100101," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+                bstring =  "00100010," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
 
                 // Adds first value
                 arg1v = getargumentvalue(line[1], this.curptr, this.offset)
@@ -854,7 +847,82 @@ class asm {
                 if(argc != 1) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
 
                 // Adds OPCODE and argument type codes (two bytes)
-                bstring =  "00100110,01010101,"; this.curptr += 2;
+                bstring =  "00100011,01010101,"; this.curptr += 2;
+
+                return bstring;
+                break;
+
+            case "int":
+                // Check if we have enough arguments, and check that arguments are valid
+                if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                arg1t = gettype(line[1])
+                
+                if(arg1t != "reg8h" && arg1t != "reg8l"&& arg1t != "imm8") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or imm8"); this.err = true; return } 
+            
+                // Adds OPCODE and argument type codes (two bytes)
+                bstring = "00100100," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+
+                // Adds first value
+                arg1v = getargumentvalue(line[1], this.curptr, 0)
+                if (arg1v[0] == "") { this.err = true; return; break;}
+                bstring += arg1v[0] + ","; this.curptr += arg1v[1];
+
+                return bstring;
+                break;
+
+            case "pushw":
+                // Check if we have enough arguments, and check that arguments are valid
+                if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                arg1t = gettype(line[1])
+                
+                if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid."); this.err = true; return } 
+            
+                // Adds OPCODE and argument type codes (two bytes)
+                bstring = "00100101," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+
+                // Adds first value
+                arg1v = getargumentvalue(line[1], this.curptr, 0)
+                if (arg1v[0] == "") { this.err = true; return; break;}
+                bstring += arg1v[0] + ","; this.curptr += arg1v[1];
+
+                return bstring;
+                break;
+
+            case "popw":
+                // Check if we have enough arguments, and check that arguments are valid
+                if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                arg1t = gettype(line[1])
+                
+                if(arg1t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid."); this.err = true; return } 
+            
+                // Adds OPCODE and argument type codes (two bytes)
+                bstring = "00100110," + gettypecode(arg1t) + "0101,"; this.curptr += 2;
+
+                // Adds first value
+                arg1v = getargumentvalue(line[1], this.curptr, this.offset)
+                if (arg1v[0] == "") { this.err = true; return; break;}
+                bstring += arg1v[0] + ","; this.curptr += arg1v[1];
+
+                return bstring;
+                break;
+
+            case "mov":
+                // Check if we have enough arguments, and check that arguments are valid
+                if(argc != 3) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                arg1t = gettype(line[1])
+                arg2t = gettype(line[2])
+                if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
+                if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
+            
+                // Adds OPCODE and argument type codes (two bytes)
+                bstring =  "00100111," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
+                // Adds register code (one byte)
+                bstring += getregistercode(line[1]) + ","; this.curptr += 1;
+
+                // Adds second value
+                arg2v = getargumentvalue(line[2], this.curptr, 0)
+                if (arg2v[0] == "") { this.err = true; return; break;}
+                bstring += arg2v[0] + ","; this.curptr += arg2v[1];
 
                 return bstring;
                 break;

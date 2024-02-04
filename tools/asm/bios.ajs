@@ -1,8 +1,21 @@
-org 0xF000; ! BIOS starts at 0xF000
+org 0xF000;                         ! BIOS starts at 0xF000
 
-jmp :bios
+jmp :bios;
 
+label biosver;
+dw 97;                              ! BIOS version. Found at 0xF004
 
-dw 0; ! BIOS version. Found at 0xF004
+label bios;                         ! End of BIOS header
 
-label bios
+org 0;                              ! Reset origin when accessing memory
+store 0 :getbiosver;                ! Set interrupt 0 to :getbiosver
+
+jmp 512;                            ! Jump to 512 when done
+
+org 0xF000;                         ! Back to BIOS memory
+
+label getbiosver;                   ! Get BIOS version
+
+load ax :biosver;                   ! Load from :biosver to ax
+
+ret;                                ! Make sure to return

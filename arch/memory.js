@@ -49,6 +49,49 @@ class memory {
         if(loc >= 0 && loc < this.data.length - 1)
             return getfromhl(this.data[loc], this.data[loc+1]);
     }
+
+    load = function(slot)
+    {
+        if(localStorage.getItem(slot) === null)
+        {
+            localStorage.setItem(slot, this.data);
+            this.memcpy(0, "0");
+            this.save(slot);
+        }
+        else
+        {
+            let tmp = localStorage.getItem(slot).split(',');
+            let tmpn = [];
+
+            for(let i=0; i<tmp.length; i++)
+                tmpn[i] = parseInt(tmp[i]);
+
+            for(let i=0; i<tmpn.length; i++)
+            {
+                this.data[wrap(this.data.length, i)] = tmpn[i];
+            }
+        }
+        localStorage.setItem("load",slot);
+    }
+
+    memcpy(pt, mem)
+    {
+        let st = mem.split(',');
+        let stn = []
+        for(let i=0; i<st.length; i++)
+            stn[i] = parseInt(st[i]);
+
+        for(let i=0; i<stn.length; i++)
+        {
+            this.data[wrap(this.data.length, i+pt)] = stn[i];
+        }
+    }
+    
+    save = function(slot)
+    {
+        localStorage.setItem("load", slot);
+        localStorage.setItem(slot, this.data);
+    }
 }
 
 /* old getfromhl. New version in registers.js

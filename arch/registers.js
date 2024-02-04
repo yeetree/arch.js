@@ -10,6 +10,8 @@ class registers {
     bx = new register16(this);
     cx = new register16(this);
     dx = new register16(this);
+
+    w = new register16(this);
 }
 
 class register16 {
@@ -27,35 +29,45 @@ class register16 {
     }
 
     // Set value of registers
-    set = function(value) {
+    set = function(value, carry = false) {
         // Get current value
         let val = this.get();
         let num = value
 
         // If num is more than 16 bit limit (carry)
         if(num > 65535) {
-            // SET CARRY FLAG HERE
-            this.registers.f.set8(true, 0);
-            this.registers.f.setbit(0, 1);
-            
+            if(carry) {
+                // SET CARRY FLAG HERE
+                //this.registers.f.set8(0, true);
+                this.registers.f.setbit(6, 1);
+            }
+
             // Wrap number
             num = wrap(65536, num)
         }
 
         // If num is less than 16 bit limit (carry)
         else if(num < 0) {
-            // SET CARRY FLAG HERE
-            this.registers.f.set8(true, 0);
-            this.registers.f.setbit(0, 1);
+            if(carry) {
+                // SET CARRY FLAG HERE
+                //this.registers.f.set8(0, true);
+                this.registers.f.setbit(6, 1);
+            }
             
             // Wrap number
             num = wrap(65536, num)
         }
         else {
-            // UNSET CARRY FLAG HERE
-            this.registers.f.set8(true, 0);
-            this.registers.f.setbit(0, 0);
+            if(carry) {
+                // UNSET CARRY FLAG HERE
+                //this.registers.f.set8(true, 0);
+                this.registers.f.setbit(6, 0);
+            }
         }
+
+        let numa = gethl(num);
+        this.high = numa[0];
+        this.low = numa[1];
     }
 
     // Get 8 bit subregister. hl = true: high, hl = false: low
@@ -67,7 +79,7 @@ class register16 {
     }
 
     // Set 8 bit subregister. hl = true: high, hl = false: low
-    set8 = function(hl = false, value) {
+    set8 = function(value, hl = false, carry = false) {
         let val = this.low
         if(hl) { val = this.high }
 
@@ -75,23 +87,39 @@ class register16 {
 
         // If num is more than 8 bit limit (carry)
         if(num > 255) {
-            // SET CARRY FLAG HERE
-            
+            if(carry) {
+                // SET CARRY FLAG HERE
+                //this.registers.f.set8(0, true);
+                this.registers.f.setbit(6, 1);
+            }
             // Wrap number
             num = wrap(256, num)
         }
 
         // If num is less than 8 bit limit (carry)
-        if(num < 0) {
-            // SET CARRY FLAG HERE
-            
+        else if(num < 0) {
+            if(carry) {
+                // SET CARRY FLAG HERE
+                //this.registers.f.set8(0, true);
+                this.registers.f.setbit(6, 1);
+            }
             // Wrap number
             num = wrap(256, num)
         }
+        else {
+            if(carry) {
+                // UNSET CARRY FLAG HERE
+                //this.registers.f.set8(true, 0);
+                this.registers.f.setbit(6, 0);
+            }
+        }
 
-        let numa = gethl(num);
-        this.high = numa[0];
-        this.low = numa[1];
+        if(hl) {
+            this.high = num;
+        }
+        else {
+            this.low = num;
+        }
     }
 
     setbit = function(bit, value) {

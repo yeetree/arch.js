@@ -1,0 +1,4 @@
+org 0x200;              ! Set origin to 0x200 (just incase the assembler didnt)
+
+int 0x00;               ! Interrupt 0
+outw ax 0;              ! Output AX

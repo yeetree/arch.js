@@ -2,13 +2,19 @@
     <head>
         <title>Arch.js</title>
 
+        <link rel="stylesheet" type="text/css" href="./style.css">
+
         <script src="./arch/addressable.js"></script>
         <script src="./arch/memory.js"></script>
         <script src="./arch/registers.js"></script>
+        <script src="./arch/io.js"></script>
+
+        <script src="./devices/consoletty.js"></script>
+
         <script src="./arch/arch.js"></script>
     </head>
     <body>
-        <p>Check console.</p>
+        <textarea readonly rows=20 cols=80 id="console"></textarea>
         <script>
             arch = new archjs();
         </script>

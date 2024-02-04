@@ -1,0 +1,31 @@
+push 'F';     ! Push stuff
+push 'E';
+push 'D';
+
+call :abc;    ! Call function
+
+pop al;       ! Pop stuff
+outb al 0;
+pop al;
+outb al 0;
+pop al;
+outb al 0;
+
+jmp :end;     ! Jump to end
+
+label abc;    ! Function
+
+push 'C';     ! Push stuff
+push 'B';
+push 'A';
+
+pop al;       ! Pop Stuff
+outb al 0;
+pop al;
+outb al 0;
+pop al;
+outb al 0;
+
+ret;          ! Return 
+
+label end;    ! End label
