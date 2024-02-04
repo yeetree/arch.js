@@ -50,13 +50,13 @@ class memory {
             return getfromhl(this.data[loc], this.data[loc+1]);
     }
 
-    load = function(slot)
+    load = function(slot, setload = false)
     {
         if(localStorage.getItem(slot) === null)
         {
             localStorage.setItem(slot, this.data);
             this.memcpy(0, "0");
-            this.save(slot);
+            this.save(slot, setload);
         }
         else
         {
@@ -71,7 +71,7 @@ class memory {
                 this.data[wrap(this.data.length, i)] = tmpn[i];
             }
         }
-        localStorage.setItem("load",slot);
+        if(setload) { localStorage.setItem("load",slot); }
     }
 
     memcpy(pt, mem)
@@ -91,7 +91,7 @@ class memory {
         }
     }
     
-    save = function(slot, setload = true)
+    save = function(slot, setload = false)
     {
         if(setload) { localStorage.setItem("load", slot); }
         localStorage.setItem(slot, this.data);
