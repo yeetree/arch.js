@@ -1,4 +1,6 @@
 class device {
+    devices = null;
+
     address = 0;
     h = 0;
     l = 0;
@@ -16,7 +18,7 @@ class device {
 
     // Called when CPU is sending data to device
     outb = function(val) {
-        val = wrap(65536, val);
+        val = wrap(256, val);
     }
 
     // Called when CPU is reading device
@@ -27,5 +29,9 @@ class device {
     // Called when CPU is sending data to device
     outw = function(val) {
         val = wrap(65536, val);
+    }
+
+    constructor(device) {
+        this.devices = device
     }
 }

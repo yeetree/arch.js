@@ -10,7 +10,8 @@
 ----------- IO MAP: ------------
 
 	0:		SERIAL PORT
-	10:		DISK PORT
+	10:		DISK MANAGER PORT
+	11:		DISK DATA PORT
 	20:		GRAPHICS PORT
 
 
@@ -109,8 +110,8 @@
 	$1C:	NOOP
 	$1D:	NOOP
 
-	$1E:	INB		DEST : reg16/reg8		PORT : ANY
-	$1F:	INW		DEST : reg16			PORT : ANY
+	$1E:	INB		( DEST : reg16/reg8 )		PORT : ANY
+	$1F:	INW		( DEST : reg16 )			PORT : ANY
 
 	$20:	OUTB	SOURCE : reg8/imm8		PORT : ANY
 	$21:	OUTW	SOURCE : ANY			PORT : ANY

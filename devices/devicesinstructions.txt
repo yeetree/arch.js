@@ -1,0 +1,64 @@
+CONSOLETTY:
+    inb                       - Retrieves last typed character in serial terminal. Sends 0 if no new characters
+    inw                       - Retrieves last typed character in serial terminal. Sends 0 if no new characters
+
+    outb ASCII                - Outputs ASCII as ASCII character to serial terminal
+    outw ASCII                - Outputs ASCII as ASCII character to serial terminal
+
+DISKMGR:
+    inb                       - Retrieves MODE of DISK
+    inw                       - Retrieves MODE of DISK
+
+    outb ASCII                - Sets MODE of DISK
+    outw ASCII                - Sets MODE of DISK
+
+DISK:
+    MODES:
+        0:  READY             - There is nothing to be done and is ready to accept new modes
+            inb               - Returns 0
+            inw               - Returns 0
+
+            outb              - Does nothing
+            outw              - Does nothing
+
+        1:  READ              - Reads and returns data from addresses
+            inb               - Returns byte from memory address
+            inw               - Retrieves word from memory address
+
+            outb ADDR         - Sets reading location to ADDR
+            outw ADDR         - Sets reading location to ADDR
+
+        2:  STREAM            - Reads and returns a stream of data 
+            inb               - Returns byte from memory address and increments address by 1 byte
+            inw               - Retrieves word from memory address and increments address by 1 word
+
+            outb ADDR         - Sets reading location to ADDR
+            outw ADDR         - Sets reading location to ADDR
+
+        3:  WRITEBYTE         - Reads and returns data from addresses
+            inb               - Returns 0
+            inw               - Returns 0
+
+            outb BYTE         - Writes byte to address
+            outw ADDR         - Sets writing location to ADDR
+
+        4:  WRITEBYTESTREAM   - Writes to a stream of data 
+            inb               - Returns 0
+            inw               - Returns 0
+
+            outb BYTE         - Writes byte to address and increments address by 1
+            outw ADDR         - Sets writing location to ADDR
+
+        5:  WRITEWORD         - Reads and returns data from addresses
+            inb               - Returns 0
+            inw               - Returns 0
+
+            outb WMODE        - Sets if next word will set address or write a word (0 = address, 1 = word)
+            outw ADDR / WORD  - Sets writing location to ADDR or writes word to address
+
+        6:  WRITEWORDSTREAM   - Writes to a stream of data 
+            inb               - Returns 0
+            inw               - Returns 0
+
+            outb WMODE        - Sets if next word will set address or write a word (0 = address, 1 = word)
+            outw ADDR / WORD  - Sets writing location to ADDR or writes word to address and increments address by 2

@@ -1,21 +1,21 @@
 function saveStorage()
 {
-    let slot = document.getElementById("slot");
-    arch.storage.save(slot.value);
+    let slot = document.getElementById("storageslot");
+    arch.io.getdevice(11).storage.save(slot.value, true);
 }
 
 function loadStorage()
 {
-    let slot = document.getElementById("slot");
-    arch.storage.load(slot.value);
+    let slot = document.getElementById("storageslot");
+    arch.io.getdevice(11).storage.load(slot.value, true);
 }
 
 function insertStorage()
 {
-    let where = document.getElementById("where");
-    let what = document.getElementById("what");
-    console.log(where + " " + what);
-    arch.storage.memcpy(parseInt(where.value), what.value);
+    let where = document.getElementById("storagewhere");
+    let what = document.getElementById("storagewhat");
+    console.log(where.value + " " + what.value);
+    arch.io.getdevice(11).storage.memcpy(parseInt(where.value), what.value);
 }
 
 function insertRAM()

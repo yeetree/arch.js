@@ -27,8 +27,12 @@ class archjs {
         this.cpumemory.data.push(this.ram, this.bios)
 
         // Add devices
-        let term = new consoletty();
+        let term = new consoletty(this.io);
+        let stomgr = new diskmgr(this.io);
+        let sto = new disk(this.io);
         this.io.devices.push(term);
+        this.io.devices.push(stomgr);
+        this.io.devices.push(sto);
 
         // Set base and stack pointers to end of workingmemory
         this.registers.bp.set(61439);
@@ -37,6 +41,17 @@ class archjs {
         // Load BIOS
         this.bios.load("bios");
         this.bios.save("bios", false);
+
+        // Load Storage
+        let tmp = "slot1";
+        if(!localStorage.getItem("load"))
+            localStorage.setItem("load", "slot1");
+        else
+        {
+            tmp = localStorage.getItem("load");
+        }
+
+        this.io.getdevice(11).storage.load(tmp);
 
         // Set program counter to 61440 (bios);
         this.registers.pc.set(61440);
@@ -1151,6 +1166,10 @@ class archjs {
                 }
                 else if(arg1[0] == types.reg8l) {
                     arg1[1].set8(this.io.inb(arg2v), false, true)
+                    //console.log(arg1[1].get());
+                }
+                else {
+                    this.io.inb(arg2v)
                 }
 
                 break;
@@ -1181,7 +1200,7 @@ class archjs {
                     arg1[1].set(this.io.inw(arg2v), true)
                 }
                 else {
-                    break;
+                    this.io.inw(arg2v)
                 }
 
                 break;

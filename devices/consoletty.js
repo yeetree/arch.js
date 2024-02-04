@@ -1,12 +1,15 @@
 class consoletty extends device {
+    devices = null;
+
     address = 0;
     h = 0;
     l = 0;
     static = false;
     term = null
 
-    constructor() {
-        super();
+    constructor(device) {
+        super(device);
+        this.devices = device;
         this.term = document.getElementById("console");
         this.term.innerHTML = "";
         this.term.outerHTML = this.term.outerHTML;
@@ -88,13 +91,6 @@ class consoletty extends device {
 
     // Called when CPU is sending data to device
     outw = function(val) {
-        val = wrap(256, val);
-        if(val == 8) {
-            let txt = this.term.innerHTML
-            this.term.innerHTML = txt.substr(0, txt.length - 1)
-        }
-        else {
-            this.term.innerHTML += this.ascii[val]
-        }
+        this.outb(val);
     }
 }

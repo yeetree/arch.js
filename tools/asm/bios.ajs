@@ -1,11 +1,11 @@
 org 0xF000;                         ! BIOS starts at 0xF000
 
-jmp :bios;
+jmp :_bios;
 
-label biosver;
+label _bios_ver;
 dw 97;                              ! BIOS version. Found at 0xF004
 
-label bios;                         ! End of BIOS header
+label _bios;                        ! End of BIOS header
 
     org 0;                          ! Reset origin when accessing memory
 
@@ -13,60 +13,90 @@ label bios;                         ! End of BIOS header
 
     store 0x22 :getcserial;         ! Set interrupt 11 to :getbiosver
 
-    jmp 512;                        ! Jump to 512 when done
-
     org 0xF000;                     ! Back to BIOS memory
 
+    jmp :_bios_loadmbr;
+
+label _bios_loadmbr;
+    outb 1 10;                      ! Sets disk mode to READ
+    outw 510 11;                    ! Sets disk address location to 510
+    inw ax 11;                      ! Reads word from disk
+
+    cmp ax 0x55AA;                  ! See if the last two bytes of MBR matches boot signature
+    je :_bios_loadmbr_load;
+    jmp :_bios_loadmbr_noload;
+
+    label _bios_loadmbr_load;       ! Loads MBR from disk (TAKES A LONG TIME)
+        outb 2 10;                      ! Sets disk mode to STREAM
+        mov cx 512;                     ! Set Counter
+
+        label _bios_loadmbr_read512;    ! Define loop
+            inb al 11;                  ! Gets byte from stream
+
+            org 0;                      ! Reset origin when accessing memory
+
+            store cx al;                ! Sets byte at address CX to AL
+
+            inc cx;                     ! increments cx
+            cmp cx 1024;                ! if cx has not reached 1024, loop again.
+            jne :_bios_loadmbr_read512;
+
+
+        jmp 512;                        ! Jump to 512 when done
+        org 0xF000;                     ! Back to BIOS memory
+
+    label _bios_loadmbr_noload;
+        jmp :_bios_loadmbr_noload
 
 label getbiosver;                   ! Get BIOS version
 
-    load ax :biosver;               ! Load from :biosver to ax
+    load ax :_bios_ver;               
 
-    ret;                            ! Make sure to return
+    ret;                            
 
 label getcserial;                   ! Wait for character
 
-    pushw cx;                       ! Push value of CX
+    pushw cx;                       
     mov cx 0;
 
-    mov ax 0;                       ! Set AX to 0
+    mov ax 0;                       
 
     label getcserial_loop;
 
     inw ax 0;                       ! Get current character
-    cmp ax 0;                       ! Compare with 0
+    cmp ax 0;                       
     jne :getcserial_end;            ! Exit loop if it is not 0
 
-    cmp cx 5;                       ! See if cx is 50
-    je :getcserial_cx0;
+    cmp cx 5;                       
+    je :getcserial_cx0;             ! Jump to :getcserial_cx0 if cx is 5
 
-    cmp cx 10;                      ! See if cx is 1000
+    cmp cx 10;                      ! Jump to :getcserial_cx1 if cx is 10
     je :getcserial_cx1;
 
-    add cx 1;
+    add cx 1;                       ! If neither, add 1 and return to loop
 
     jmp :getcserial_loop;
 
-    label getcserial_cx0;
+    label getcserial_cx0;           ! Add an underscore and increment cx
         outb '_' 0;
         add cx 1;
         jmp :getcserial_loop
 
-    label getcserial_cx1;
+    label getcserial_cx1;           ! Remove the underscore and set cx to 0
         outb 8 0;
         mov cx 0;
         jmp :getcserial_loop
 
-    label getcserial_end_cx1;
+    label getcserial_end_cx1;       ! Remove the underscore, set cx to 0, and jump to :getcserial_end
         outb 8 0;
         mov cx 0;
         jmp :getcserial_end
 
     label getcserial_end;
 
-    cmp cx 6;
+    cmp cx 6;                       ! Jump to :getcserial_end_cx1 if cx is 6 or more. (It means the underscore is still there)
     je :getcserial_end_cx1;
     jc :getcserial_end_cx1;
 
-    popw cx;
+    popw cx;                        ! Restore original cx value
     ret;                            ! Make sure to return

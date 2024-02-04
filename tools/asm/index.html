@@ -7,13 +7,16 @@
     <body>
         <p>Program</p>
         <textarea rows=30 cols=70 id="prg"></textarea>
-        <button onclick="asm.compile(prgBOX.value);">Compile</button>
+        <p>Force Length</p>
+        <input id="length" type="number" value=0></input>
+        <button onclick="asm.compile(prgBOX.value, lenBOX.value);">Compile</button>
         <p>Output</p>
         <textarea rows=30 cols=70 id="compile" style="margin-right:true"></textarea>
         <p>Log</p>
         <textarea rows=30 cols=70 id="log" style="margin-right:true"></textarea>
         <script>
             prgBOX = document.getElementById("prg");
+            lenBOX = document.getElementById("length");
             compileBOX = document.getElementById("compile");
             logBOX = document.getElementById("log");
             asm = new asm();
