@@ -28,10 +28,17 @@ function insertRAM()
 
 function insertBIOS()
 {
+    let which = document.getElementById("bioswhich");
     let what = document.getElementById("bioswhat");
+
     arch.bios.reset();
-    if(what.value) {
+    
+    if(which.value == "custom" && what.value) {
         arch.bios.memcpy(0, what.value);
+        arch.bios.save("bios", false);
+    }
+    else if(bioslist.indexOf(which.value) != -1) {
+        arch.bios.memcpy(0, bioslistbin[bioslist.indexOf(which.value)]);
         arch.bios.save("bios", false);
     }
     else {

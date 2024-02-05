@@ -4,6 +4,7 @@
 
         <link rel="stylesheet" type="text/css" href="./style.css">
         <script src="./vm.js"></script>
+        <script src="./bioslist.js"></script>
 
         <script src="./arch/addressable.js"></script>
         <script src="./arch/memory.js"></script>
@@ -59,6 +60,10 @@
                 <button class="dropbtn">BIOS</button>
                 <div class="dropdown-content">
                     <p>BIOS Settings</p>
+                    <select id = "bioswhich" >  
+                        <option> Arch.js BIOS 0-0-1 </option>  
+                        <option> custom </option>  
+                    </select>  
                     <input type="text" id="bioswhat" value="" placeholder="what"></input>
                     <a onclick="insertBIOS();">Flash BIOS</a>
                 </div>

@@ -108,9 +108,9 @@ class asm {
                             }
                         }
 
-                        // Add boot signature (0xAA55)
-                        numout[510] = 170;
-                        numout[511] = 85;
+                        // Add boot signature (0x55AA)
+                        numout[510] = 85;
+                        numout[511] = 170;
                     }
                 }
 
