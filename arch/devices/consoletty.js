@@ -72,11 +72,11 @@ class consoletty extends device {
     outb = function(val) {
         val = wrap(256, val);
         if(val == 8) {
-            let txt = this.term.innerHTML
-            this.term.innerHTML = txt.substr(0, txt.length - 1)
+            let txt = this.term.value
+            this.term.value = txt.substr(0, txt.length - 1)
         }
         else {
-            this.term.innerHTML += this.ascii[val]
+            this.term.value += this.ascii[val]
         }
     }
 
