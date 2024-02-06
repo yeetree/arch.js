@@ -62,6 +62,55 @@ function gettypecode(type) {
     return "0101"; // Whoops type
 }
 
+// Checks if the inputted string qualifies as a string
+function checkforstring(str) {
+    if(str[0] == "\"" && str[str.length-1] == "\"") { return true; }
+    return false;
+}
+
+// Replaces control chatacters with their escape values
+// I'm not sure why this doesn't work, it's not my code.
+// However, it does top eval from freaking out when there's
+// an actual control character.
+function escapeJSON(string) {
+    return string.replace(/[\n\r\t\b\f]/g, '\\$&');
+}
+
+// Gets value of a string
+function getstringvalue(str) {
+    let isstr = checkforstring(str);
+    let blength = 0;
+    let bvalue = "";
+    
+    if(isstr) {
+
+        str = str.slice(0, str.length - 1); // Slice end
+        str = str.slice(1, str.length);     // Slice start
+
+        try {
+            str = eval("\"" + escapeJSON(str) + "\"") // Parse it to get character control codes
+                                                    // Re-Adding Quotation marks for safety
+                                                    // BEWARE OF EVAL
+                                                    // EVAL = EVIL
+        }
+        catch {
+            return [0, 'ERR']
+        }
+
+        for(let i = 0; i < str.length; i++) {
+            if(ascii.indexOf(str[i]) != -1) {
+                bvalue += ascii.indexOf(str[i]).toString(2).padStart(8, '0') + ","
+                blength += 1;
+            }
+        }
+    }
+    else {
+        return [0, 'ERR']
+    }
+
+    return [blength, bvalue]
+}
+
 // Find register code (binary) for instruction
 function getregistercode(arg) {
     let regindex = -1
@@ -259,11 +308,30 @@ regstr8l = [
     "fl", "pcl", "spl", "bpl", "il", "al", "bl", "cl", "dl", 
 ]
 
+ascii = [
+    '\u0000','\u0001','\u0002','\u0003','\u0004','\u0005','\u0006','\u0007',
+    '\u0008','\u0009','\u000A','\u000B','\u000C','\u000D','\u000E','\u000F',
+    '\u0010','\u0011','\u0012','\u0013','\u0014','\u0015','\u0016','\u0017',
+    '\u0018','\u0019','\u001A','\u001B','\u001C','\u001D','\u001E','\u001F',
+    ' ', '!', '"', '#', '$', '%', '&', '\'',
+    '(', ')', '*', '+', ',', '-', '.', '/',
+    '0', '1', '2', '3', '4', '5', '6', '7',
+    '8', '9', ':', ';', '<', '=', '>', '?',
+    '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+    'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+    'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+    'X', 'Y', 'Z', '[', '\\' ,']', '^', '_',
+    '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
+    'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+    'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+    'x', 'y', 'z', '{', '|', '}', '~', ''
+];
+
 asciistr = [
-    '\'\'','\'&#01;\'','\'&#02;\'','\'&#03;\'','\'&#04;\'','\'&#05;\'','\'&#06;\'','\'&#;07\'',
-    '\'&#08;\'','\'&#09;\'','\'&#10;\'','\'&#11;\'','\'&#12;\'','\'NL\'','\'&#14;\'','\'&#15;\'',
-    '\'&#16;\'','\'&#17;\'','\'&#18;\'','\'&#19;\'','\'&#20;\'','\'&#21;\'','\'&#22;\'','\'&#23;\'',
-    '\'&#24;\'','\'&#25;\'','\'&#26;\'','\'&#27;\'','\'&#28;\'','\'&#29;\'','\'&#30;\'','\'&#31\'',
+    '\'\u0000\'','\'\u0001\'','\'\u0002\'','\'\u0003\'','\'\u0004\'','\'\u0005\'','\'\u0006\'','\'\u0007\'',
+    '\'\u0008\'','\'\u0009\'','\'\u000A\'','\'\u000B\'','\'\u000C\'','\'\u000D\'','\'\u000E\'','\'\u000F\'',
+    '\'\u0010\'','\'\u0011\'','\'\u0012\'','\'\u0013\'','\'\u0014\'','\'\u0015\'','\'\u0016\'','\'\u0017\'',
+    '\'\u0018\'','\'\u0019\'','\'\u001A\'','\'\u001B\'','\'\u001C\'','\'\u001D\'','\'\u001E\'','\'\u001F\'',
     '\'SP\'', '\'!\'', '\'"\'', '\'#\'', '\'$\'', '\'%\'', '\'&\'', '\'\'\'',
     '\'(\'', '\')\'', '\'*\'', '\'+\'', '\'CM\'', '\'-\'', '\'.\'', '\'/\'',
     '\'0\'', '\'1\'', '\'2\'', '\'3\'', '\'4\'', '\'5\'', '\'6\'', '\'7\'',

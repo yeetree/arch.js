@@ -183,14 +183,32 @@ class asm {
 
             case "db":
                 // Check if we have enough arguments, and that the argument is an immediate
-                if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
-                type = gettype(line[1])
-                if(type != "imm8") { this.print("ASSEMBLER ERROR: Argument type is not imm8"); this.err = true; return } 
+                if(argc > 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                
+                // First, check if it is a string.
+                let strval = line.slice(1).join(" "); // Extract string by removing first element (instruction)
+                                                      // And joining it by space.
+                if(checkforstring(strval)) {
+                    let getstr = getstringvalue(strval);
+                    console.log(getstr);
 
-                bstring = getbyte(line[1]) + ","
-                this.curptr += 1
-                return bstring;
+                    if(getstr[1] == "ERR") {
+                        this.print("ASSEMBLER ERROR: String is invalid"); this.err = true; return;
+                    }
 
+                    bstring = getstr[1] // String value
+                    this.curptr += getstr[0] // String length
+                    return bstring;
+                }
+                else {
+                    if(argc != 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                    type = gettype(line[1])
+                    if(type != "imm8") { this.print("ASSEMBLER ERROR: Argument type is not imm8"); this.err = true; return } 
+
+                    bstring = getbyte(line[1]) + ","
+                    this.curptr += 1
+                    return bstring;
+                }
                 break;
 
             case "dw":

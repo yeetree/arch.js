@@ -49,6 +49,16 @@ function insertBIOS()
 
 async function updateInfo() {
     document.getElementById("infopc").innerHTML = "Program Counter: " + arch.registers.pc.get();
+    
+    let state = "Running"
+
+    if(!arch.isrunning) {
+        state = "Stopped"
+    }
+
+    document.getElementById("infostate").innerHTML = "Machine State: " + state;
+
+    document.getElementById("infosto").innerHTML = "Current Storage Slot: " + localStorage.getItem("load");
     await sleep(1);
     updateInfo();
 }
