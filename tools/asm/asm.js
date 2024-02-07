@@ -159,8 +159,10 @@ class asm {
 
         let arg1t;
         let arg2t;
+        let arg3t;
         let arg1v;
         let arg2v;
+        let arg3v;
 
         let type;
         
@@ -183,7 +185,7 @@ class asm {
 
             case "db":
                 // Check if we have enough arguments, and that the argument is an immediate
-                if(argc > 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
+                if(argc < 2) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 
                 // First, check if it is a string.
                 let strval = line.slice(1).join(" "); // Extract string by removing first element (instruction)
@@ -441,14 +443,14 @@ class asm {
                 return bstring;
                 break;
 
-            case "idiv":
+            case "mod":
                 // Check if we have enough arguments, and check that arguments are valid
                 if(argc != 3) { this.print("ASSEMBLER ERROR: Invalid amount of args"); this.err = true; return }
                 arg1t = gettype(line[1])
                 arg2t = gettype(line[2])
                 if(arg1t != "reg8h" && arg1t != "reg8l" && arg1t != "reg16") { this.print("ASSEMBLER ERROR: Argument type is not reg8 or reg16"); this.err = true; return } 
                 if(arg2t == "ERR") { this.print("ASSEMBLER ERROR: Argument type is not valid"); this.err = true; return } 
-            
+
                 // Adds OPCODE and argument type codes (two bytes)
                 bstring =  "00001011," + gettypecode(arg1t) + gettypecode(arg2t) + ","; this.curptr += 2;
                 // Adds register code (one byte)

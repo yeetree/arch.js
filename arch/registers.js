@@ -25,7 +25,7 @@ class register16 {
 
     // Get value of registers
     get = function() {
-        return getfromhl(this.high, this.low)
+        return getfromhl(parseInt(this.high), parseInt(this.low))
     }
 
     // Set value of registers
@@ -33,6 +33,10 @@ class register16 {
         // Get current value
         let val = this.get();
         let num = value
+
+        if(!num) {
+            num = 0;
+        }
 
         // If num is more than 16 bit limit (carry)
         if(num > 65535) {
@@ -43,7 +47,7 @@ class register16 {
             }
 
             // Wrap number
-            num = wrap(65536, num)
+            num = parseInt(wrap(65536, num))
         }
 
         // If num is less than 16 bit limit (carry)
@@ -55,7 +59,7 @@ class register16 {
             }
             
             // Wrap number
-            num = wrap(65536, num)
+            num = parseInt(wrap(65536, num))
         }
         else {
             if(carry) {
@@ -65,7 +69,7 @@ class register16 {
             }
         }
 
-        let numa = gethl(num);
+        let numa = gethl(parseInt(num));
         this.high = numa[0];
         this.low = numa[1];
     }
@@ -75,7 +79,7 @@ class register16 {
         let reg = this.low
         if(hl) { reg = this.high }
 
-        return wrap(256, reg)
+        return parseInt(wrap(256, reg))
     }
 
     // Set 8 bit subregister. hl = true: high, hl = false: low
@@ -84,6 +88,9 @@ class register16 {
         if(hl) { val = this.high }
 
         let num = value
+        if(!num) {
+            num = 0;
+        }
 
         // If num is more than 8 bit limit (carry)
         if(num > 255) {
@@ -93,7 +100,7 @@ class register16 {
                 this.registers.f.setbit(6, 1);
             }
             // Wrap number
-            num = wrap(256, num)
+            num = parseInt(wrap(256, num))
         }
 
         // If num is less than 8 bit limit (carry)
@@ -104,7 +111,7 @@ class register16 {
                 this.registers.f.setbit(6, 1);
             }
             // Wrap number
-            num = wrap(256, num)
+            num = parseInt(wrap(256, num))
         }
         else {
             if(carry) {
@@ -115,10 +122,10 @@ class register16 {
         }
 
         if(hl) {
-            this.high = num;
+            this.high = parseInt(num);
         }
         else {
-            this.low = num;
+            this.low = parseInt(num);
         }
     }
 
@@ -157,6 +164,9 @@ function getfromhl(h, l) {
 
 function gethl(value) {
     let num = value
+    if(!num) {
+        num = 0;
+    }
 
     // If num is more than 16 bit
     if(num > 65535) {

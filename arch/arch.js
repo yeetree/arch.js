@@ -89,7 +89,7 @@ class archjs {
             mul:    0x8,
             imul:   0x9,
             div:    0xA,
-            idiv:   0xB,
+            mod:   0xB,
             not:    0xC,
             neg:    0xD,
             inc:    0xE,
@@ -571,7 +571,7 @@ class archjs {
 
                 break;
 
-            case insts.idiv:
+            case insts.mod:
                 // Retrieve arguments and advance pointer however many bytes is necessary
                 args = this.getarguments(pc)
                 arg1 = args[0];
@@ -592,18 +592,18 @@ class archjs {
                     arg2v = arg2[1];
                 }
 
-                // Checks if argument 1 is a register and divides values. If not, do nothing
+                // Checks if argument 1 is a register and gets modulo values. If not, do nothing
                 if(arg1[0] == types.reg16) {
                     arg1v = arg1[1].get();
-                    arg1[1].set(arg1v / arg2v, true)
+                    arg1[1].set(arg1v % arg2v, true)
                 }
                 else if(arg1[0] == types.reg8h) {
                     arg1v = arg1[1].get8(true);
-                    arg1[1].set8(arg1v / arg2v, true,  true)
+                    arg1[1].set8(arg1v % arg2v, true,  true)
                 }
                 else if(arg1[0] == types.reg8l) {
                     arg1v = arg1[1].get8(false);
-                    arg1[1].set8(arg1v / arg2v, false, true)
+                    arg1[1].set8(arg1v % arg2v, false, true)
                 }
 
                 break;

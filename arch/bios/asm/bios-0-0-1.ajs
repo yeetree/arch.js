@@ -2,8 +2,20 @@ org 0xF000;                         ! BIOS starts at 0xF000
 
 jmp :_bios;
 
-label _bios_ver;
-dw 97;                              ! BIOS version. Found at 0xF004
+label _bios_ver;                    ! BIOS version
+dw 0;
+
+label _bios_startupmsg;             ! Message displayed when BIOS starts up
+db "Arch.js BIOS v\0"
+
+label _bios_searchingforboot;       ! Message displayed when BIOS is searching for an MBR
+db "\nSearching for bootable disk...\0"
+
+label _bios_bootdiskfound;          ! Message displayed when BIOS found MBR
+db "\nBootable disk found. Booting disk...\0"
+
+label _bios_notbootable;            ! Message displayed when disk is not bootable
+db "\nThis disk is not bootable.\0"
 
 label _bios;                        ! End of BIOS header
 
@@ -11,13 +23,25 @@ label _bios;                        ! End of BIOS header
 
     store 0x20 :getbiosver;         ! Set interrupt 10 to :getbiosver
 
-    store 0x22 :getcserial;         ! Set interrupt 11 to :getbiosver
+    store 0x22 :getcserial;         ! Set interrupt 11 to :getcserial
+
+    store 0x40 :printstr;           ! Set interrupt 20 to :printstr
+
+    store 0x42 :printnum;           ! Set interrupt 21 to :printnum
 
     org 0xF000;                     ! Back to BIOS memory
 
-    jmp :_bios_loadmbr;
+    jmp :_bios_loadmbr;             ! Load MBR
 
 label _bios_loadmbr;
+    mov ax :_bios_startupmsg;       ! Print StartUp Message
+    int 0x20;
+    load ax :_bios_ver;             ! Print Version
+    int 0x21;
+
+    mov ax :_bios_searchingforboot; ! Loads address of searchingforboot string
+    int 0x20;                       ! Prints string
+
     outb 1 10;                      ! Sets disk mode to READ
     outw 510 11;                    ! Sets disk address location to 510
     inw ax 11;                      ! Reads word from disk
@@ -26,7 +50,10 @@ label _bios_loadmbr;
     je :_bios_loadmbr_load;
     jmp :_bios_loadmbr_noload;
 
-    label _bios_loadmbr_load;       ! Loads MBR from disk (TAKES A LONG TIME)+
+    label _bios_loadmbr_load;           ! Loads MBR from disk (TAKES A LONG TIME)
+        mov ax :_bios_bootdiskfound;    ! Prints BootDiskFound Message
+        int 0x20;
+
         outb 2 10;                      ! Sets disk mode to STREAM
         mov cx 512;                     ! Set Counter
 
@@ -46,7 +73,76 @@ label _bios_loadmbr;
         org 0xF000;                     ! Back to BIOS memory
 
     label _bios_loadmbr_noload;
-        jmp :_bios_loadmbr_noload
+        mov ax :_bios_notbootable;      ! Set AX to address of Not Bootable Message
+        int 0x20;                       ! Interrupt to print string at location AX
+        label _bios_loadmbr_noload_loop;
+        jmp :_bios_loadmbr_noload_loop; ! Loop forever
+
+label printnum;                         ! Prints a number
+    pushw ax;                           ! Pushes values of current registers
+    pushw bx;
+    pushw cx;
+
+    mov cx 0;                           ! Sets CX to 0
+
+    cmp ax 0;                           ! See if AX is already 0
+    jne :printnum_loop;                 ! If not, start loop;
+    
+    pushw 0;                            ! If so, push 0, increment CX, and go to end of loop.
+    inc cx;
+
+    jmp :printnum_end;
+
+
+    label printnum_loop;                ! Define loop
+
+        mov bx ax;                      ! Set BX to AX
+        div ax 10;                      ! Divide AX by 10
+        mod bx 10;                      ! Get modulo of BX and 10 (BX is AX)
+
+        cmp bx 0;                       ! See if modulo (remainder) is 0
+        je :printnum_end;               ! Jump to end of loop if so
+
+        pushw bx;                       ! Else, push bx, increment cx, and restart loop
+        inc cx;
+
+        jmp :printnum_loop;
+
+    label printnum_end;                 ! End of loop
+
+        popw bx;                        ! Pop BX
+        add bx '0';                     ! Convert to ASCII
+        outw bx 0;                      ! Print to Serial Console
+        dec cx;                         ! Decrement CX
+
+        cmp cx 0;                       ! If CX is not 0 (No more characters to print)
+        jne :printnum_end;              ! Loop back to printnum_end
+
+        popw cx;                        ! Pop values of registers
+        popw bx;
+        popw ax;
+
+        ret;                            ! Make sure to return
+
+
+label printstr;                     ! Prints a string
+    pushw ax;
+    pushw dx;
+
+    label printstr_loop;
+    
+    load dl ax;                     ! Loads data from memory location AX and stores in DX
+    cmp dl 0;                       ! Check if current character is null
+    je :printstr_end;
+    outb dl 0;
+    inc ax;
+    jmp :printstr_loop;
+
+    label printstr_end;
+    
+    popw dx;
+    popw ax
+    ret;
 
 label getbiosver;                   ! Get BIOS version
 

@@ -85,7 +85,7 @@
 	$08:	MUL		DEST : reg16/reg8		SOURCE : ANY
 	$09:	IMUL	DEST : reg16/reg8		SOURCE : ANY !! ALIAS TO MUL, NOT IMPLEMENTED
 	$A:		DIV		DEST : reg16/reg8		SOURCE : ANY
-	$B:		IDIV	DEST : reg16/reg8		SOURCE : ANY !! ALIAS TO DIV, NOT IMPLEMENTED
+	$B:		MOD		DEST : reg16/reg8		SOURCE : ANY 
 	$C:		NOT		DEST : reg16/reg
 	$D:		NEG		DEST : reg16/reg8
 	$E:		INC		DEST : reg16/reg8

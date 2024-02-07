@@ -11,23 +11,31 @@ class memory {
 
     setbyte = function(loc, val, force = false)
     {
+        if(!val) {
+            val = 0;
+        }
+
         //Sets a byte in this memory.
         //If the location is in bounds and this storage isn't readonly, continue.
         if(loc >= 0 && loc < this.data.length) {
             if(!this.readonly || force) {
                 // Wrap value (just in case)
-                this.data[loc] = wrap(256, val);
+                this.data[loc] = parseInt(wrap(256, val));
             }
         }
     }
     setword = function(loc, val, force = false)
     {
+        if(!val) {
+            val = 0;
+        }
+
         //Sets a word in this memory.
         //If the location is in bounds and this storage isn't readonly, continue.
         if(loc >= 0 && loc < this.data.length - 1) {
             if(!this.readonly || force) {
                 // Wrap value (just in case) and get high/low values
-                let hl = gethl(wrap(65536, val))
+                let hl = gethl(parseInt(wrap(65536, val)))
                 this.data[loc] = hl[0];
                 this.data[loc+1] = hl[1];
             }
@@ -39,7 +47,7 @@ class memory {
         //This one is simple. If the location is in range, return
         //the data at the requested location
         if(loc >= 0 && loc < this.data.length)
-            return wrap(256, this.data[loc]);
+            return parseInt(wrap(256, this.data[loc]));
     }
 
     getword = function(loc)
@@ -47,7 +55,7 @@ class memory {
         //If the location is in range, return the data combined with the next data at the
         //requested location.
         if(loc >= 0 && loc < this.data.length - 1)
-            return getfromhl(this.data[loc], this.data[loc+1]);
+            return getfromhl(parseInt(this.data[loc]), parseInt(this.data[loc+1]));
     }
 
     load = function(slot, setload = false)
