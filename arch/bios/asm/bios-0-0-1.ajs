@@ -100,12 +100,16 @@ label printnum;                         ! Prints a number
         div ax 10;                      ! Divide AX by 10
         mod bx 10;                      ! Get modulo of BX and 10 (BX is AX)
 
-        cmp bx 0;                       ! See if modulo (remainder) is 0
-        je :printnum_end;               ! Jump to end of loop if so
+        cmp ax 0;                       ! See if result is 0
+        jne :printnum_gobackloop;       ! Jump to start of loop if not
+        cmp bx 0;                       ! See if remainder is 0
+        jne :printnum_gobackloop;       ! Jump to start of loop if not
 
-        pushw bx;                       ! Else, push bx, increment cx, and restart loop
+        jmp :printnum_end;             ! Else, restart loop
+
+    label printnum_gobackloop;
+        pushw bx;                       ! push bx, increment cx
         inc cx;
-
         jmp :printnum_loop;
 
     label printnum_end;                 ! End of loop
