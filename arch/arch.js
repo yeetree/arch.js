@@ -4,6 +4,7 @@ class archjs {
     ram = null;
     registers = null;
     io = null;
+    video = null;
 
     isrunning = false;
 
@@ -30,6 +31,7 @@ class archjs {
         let term = new consoletty(this.io);
         let stomgr = new diskmgr(this.io);
         let sto = new disk(this.io);
+        this.video = new display();
         this.io.devices.push(term);
         this.io.devices.push(stomgr);
         this.io.devices.push(sto);

@@ -4,7 +4,15 @@ Arch.js is my custom 16 bit CPU that I wrote in JavaScript.
 I also wrote an assembler for it, and a BIOS.
 
 ## How do I use Arch.js?
-NOTE: This doesn't cover how to use the assembler, or how Arch.js works internally
+### \<Note\>
+
+This doesn't cover how to use the assembler, or how Arch.js works internally.
+
+Documentation on the default devices that come with Arch.js can be found at `arch/devices/deviceinstructions.txt`.
+
+Documentation on ArchOfficial programs (such as BIOS) will be found in the `archofficial` directory.
+
+### \</Note\>
 
 As of now, the Arch.js VM has two things: a serial console and VM Management Menus.
 

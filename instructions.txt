@@ -10,9 +10,13 @@
 ----------- IO MAP: ------------
 
 	0:		SERIAL PORT
+	
 	10:		DISK MANAGER PORT
 	11:		DISK DATA PORT
-	20:		GRAPHICS PORT
+
+	20:		VIDEO SERIAL PORT
+	21:		VIDEO BITMAP MANAGER PORT
+	22:		VIDEO BITMAP PORT
 
 
 ------------ REGISTERS: ------------

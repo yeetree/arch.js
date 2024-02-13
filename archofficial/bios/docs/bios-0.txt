@@ -1,0 +1,47 @@
+--------- ArchOfficial BIOS 0 Documentation: ---------
+
+    --------------- BIOS Functions ---------------
+
+        These functions are stored in the IVT and can be called using 'INT'
+
+        0x10:                       getbiosver - moves BIOS version to AX
+
+        0x11:                       getcserial - waits for chatacter to be
+                                    inputted from serial terminal while
+                                    displayinga blinking cursor. Stores
+                                    character in AX
+        
+        0x20:                       printstr - prints a null-terminated string
+                                    located in address pointed to by AX to
+                                    serial console
+
+        0x21:                       printnum - prints numerical value of AX to
+                                    serial console
+
+
+    ------------- Bootup Procedure: --------------
+
+        The first thing that BIOS does is load its own functions into the IVT
+        (Interrupt Vector Table)
+
+        The IVT is the first 512 bytes of memory that contain addresses to functions.
+        When INT is called, it calls the function stored at that address.
+
+        Next, BIOS will display a few messages:
+            'ArchOfficial BIOS v0'
+            'Searching for bootable disk...'
+
+        It will then look at the last two bytes of the MBR (first 512 bytes of storage)
+
+        If the bytes are 0x55AA, BIOS will know that the storage is bootable
+        and will load the MBR at memory locations 512-1023 (right after the IVT)
+
+        It will also display:
+            'Bootable disk found. Booting disk...'
+
+        Then, it will jump to memory location 512 (Where MBR is loaded to)
+
+        If the last two bytes of the MBR are not 0x55AA, BIOS will display:
+            'This disk is not bootable.'
+        
+        And then enter an infinite loop.

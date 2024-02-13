@@ -14,10 +14,12 @@
 
         <script src="./arch/devices/consoletty.js"></script>
         <script src="./arch/devices/disk.js"></script>
+        <script src="./arch/devices/video.js"></script>
 
         <script src="./arch/arch.js"></script>
     </head>
     <body>
+        <canvas id="screen"></canvas>
         <textarea readonly rows=20 cols=80 id="console"></textarea>
         <div class="vminfo">
             <div class="vmbuttons">
@@ -62,7 +64,7 @@
                     <div class="dropdown-content">
                         <p>BIOS Settings</p>
                         <select id = "bioswhich" >  
-                            <option> Arch.js BIOS 0 </option>  
+                            <option> ArchOfficial BIOS 0 </option>  
                             <option> custom </option>  
                         </select>  
                         <input type="text" id="bioswhat" value="" placeholder="what"></input>

@@ -1,20 +1,27 @@
 #screen {
-    width: 768px;
-    height: 768px;
+    width: 512px;
     image-rendering: pixelated; image-rendering: crisp-edges;
 }
 
 #console {
-    position: relative;
+    position: absolute;
+    align-self: right;
+    resize: none;
+    top: 0;
+    margin: 10px;
 }
 
 .vmbuttons {
-    position: relative;
-    right: 0;
+    position: absolute;
+    top: 340;
+    left: 530;
     display: flex;
 }
 
 .info {
+    position: absolute;
+    top: 370;
+    left: 530;
     margin: 1px;
     padding: 5px;
     font-size: 16px;

@@ -1,3 +1,5 @@
+; This program only works with ArchOfficial BIOS / 
+
 org 0x200;              ! Set origin to 0x200 (just incase the assembler didnt)
 
 label loop;

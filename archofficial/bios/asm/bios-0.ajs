@@ -1,3 +1,5 @@
+; ArchOfficial BIOS 0 
+
 org 0xF000;                         ! BIOS starts at 0xF000
 
 jmp :_bios;
@@ -6,7 +8,7 @@ label _bios_ver;                    ! BIOS version
 dw 0;
 
 label _bios_startupmsg;             ! Message displayed when BIOS starts up
-db "Arch.js BIOS v\0"
+db "ArchOfficial BIOS v\0"
 
 label _bios_searchingforboot;       ! Message displayed when BIOS is searching for an MBR
 db "\nSearching for bootable disk...\0"
