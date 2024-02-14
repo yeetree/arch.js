@@ -22,6 +22,7 @@ class archjs {
         // Set up memory and registers
         this.cpumemory = new addressable();
         this.bios = new memory(4096, true);
+
         this.ram = new memory(61440);
         this.registers = new registers();
         this.io = new iomanager();
@@ -31,7 +32,7 @@ class archjs {
         let term = new consoletty(this.io);
         let stomgr = new diskmgr(this.io);
         let sto = new disk(this.io);
-        this.video = new display();
+        this.video = new videodevice();
         this.io.devices.push(term);
         this.io.devices.push(stomgr);
         this.io.devices.push(sto);

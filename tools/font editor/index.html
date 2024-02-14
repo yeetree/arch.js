@@ -8,12 +8,18 @@
         <table>
             <tbody id="table"></tbody>
         </table>
+        <div id="widhei">
+            <input type="number" id="wid" value=8 placeholder="w"> <p>x</p> <input type="number" id="hei" value=8 placeholder="h">
+            <button onclick="initFontTable(wbox.value, hbox.value);">Set Character Size</button>
+        </div>
         <textarea style="position: relative;display: block;resize: none;float: bottom;" id="out" rows="10" cols="38"></textarea>
         <button onclick="document.getElementById('out').value = getData();">Get Data</button>
         <button onclick="setData(document.getElementById('out'));">Load Data</button>
         <button onclick="cleard();">Clear</button>
         <script>
-            initFontTable();
+            let wbox = document.getElementById("wid")
+            let hbox = document.getElementById("hei")
+            initFontTable(wbox.value, hbox.value);
         </script>
     </body>
 </html>
