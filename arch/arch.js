@@ -4,6 +4,7 @@ class archjs {
     ram = null;
     registers = null;
     io = null;
+
     video = null;
 
     isrunning = false;
@@ -29,13 +30,21 @@ class archjs {
         this.cpumemory.data.push(this.ram, this.bios)
 
         // Add devices
-        let term = new consoletty(this.io);
+        let serial = new consoletty(this.io);
         let stomgr = new diskmgr(this.io);
         let sto = new disk(this.io);
         this.video = new videodevice();
-        this.io.devices.push(term);
+        let vserial = new videoserial(this.io);
+        let vmanager = new videomanager(this.io);
+        let vdatamanager = new videodatamanager(this.io);
+        let vdata = new videodata(this.io, this.video);
+        this.io.devices.push(serial);
         this.io.devices.push(stomgr);
         this.io.devices.push(sto);
+        this.io.devices.push(vserial);
+        this.io.devices.push(vmanager);
+        this.io.devices.push(vdatamanager);
+        this.io.devices.push(vdata);
 
         // Set base and stack pointers to end of workingmemory
         this.registers.bp.set(61439);
