@@ -1,4 +1,4 @@
-class display{
+class display {
     canvas = null;
     ctx = null;
 
@@ -146,7 +146,7 @@ class videodevice {
 class videoserial extends device {
   devices = null;
 
-  address = 0;
+  address = 20;
   h = 0;
   l = 0;
   static = false;
@@ -222,6 +222,7 @@ class videoserial extends device {
 
   // Called when CPU is sending data to device
   outb = function(val) {
+      console.log(val);
       val = wrap(256, val);
 
       let buf = this.devices.getdevice(this.address + 3).videodevice.vram.data;
@@ -233,8 +234,18 @@ class videoserial extends device {
       let hc = this.handlecontrol(txt, val);
       txt = hc.txt;
 
+      let addr = this.row*this.col;
+      console.log(this.col)
+
       if(!hc.handled) {
-        this.term.value += this.ascii[val]
+        this.devices.getdevice(this.address + 3).videodevice.vram.setbyte(addr, val)
+        this.devices.getdevice(this.address + 3).videodevice.vram.setbyte(addr+1, 255)
+      }
+
+      this.col+=2;
+      if(this.col == 64) {
+        this.col == 0;
+        this.row +=1;
       }
   }
 
@@ -255,9 +266,9 @@ class videoserial extends device {
   handleesc = function(val) {
     let nescstr = this.escstr.concat([val]);
     let goodesc = false;
-    switch(nescstr[0]) {
+    /*switch(nescstr[0]) {
       case 
-    }
+    }*/
   }
 
   handlecontrol = function(txt, val) {
