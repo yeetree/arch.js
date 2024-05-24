@@ -2,9 +2,13 @@
 
 org 0x200;              ! Set origin to 0x200 (just incase the assembler didnt)
 
+outb 2 21;
+inb 21;
+outb 1 21;
+
 label loop;
 
-int 0x11;               ! Interrupt 11
-outw ax 0;              ! Output AX
+outb 'A' 20;
+inb 21; 
 
 jmp :loop;
